@@ -200,6 +200,32 @@
       "brandmark_label": "Vibe Coding · E",
       "brandmark_svg": "<svg width=\"24\" height=\"22\" viewBox=\"0 0 24 22\" fill=\"none\"><rect x=\"6\" y=\"6\" width=\"12\" height=\"10\" rx=\"1.5\" fill=\"#6F7F6A\"/><path d=\"M9 6V3M12 6V3M15 6V3M9 16v3M12 16v3M15 16v3M6 9H3M6 12H3M18 9h3M18 12h3\" stroke=\"#8FA9B8\" stroke-width=\"1.4\" stroke-linecap=\"round\"/><rect x=\"9.5\" y=\"9.5\" width=\"5\" height=\"3\" rx=\"0.6\" fill=\"#C9BAA6\"/></svg>",
       "title_mark_svg": "<svg width=\"80\" height=\"52\" viewBox=\"0 0 80 52\" fill=\"none\"><rect x=\"18\" y=\"14\" width=\"34\" height=\"28\" rx=\"4\" fill=\"#6F7F6A\" opacity=\"0.92\"/><path d=\"M25 14V6M35 14V6M45 14V6M25 42v8M35 42v8M45 42v8M18 21h-8M18 28h-8M18 35h-8M52 21h8M52 28h8M52 35h8\" stroke=\"#8FA9B8\" stroke-width=\"2.4\" stroke-linecap=\"round\"/><rect x=\"27\" y=\"22\" width=\"16\" height=\"5\" rx=\"1\" fill=\"#C9BAA6\"/><rect x=\"27\" y=\"30\" width=\"10\" height=\"4\" rx=\"1\" fill=\"#A8BDB6\"/><path d=\"M70 8l1.4 3.2 3.2 1.4-3.2 1.4L70 18l-1.4-3.2L65.4 13l3.2-1.4z\" fill=\"#C9BAA6\"/></svg>"
+    },
+    {
+      "source": "16-agentic-ai.md",
+      "output": "16-agentic-ai.html",
+      "title": "Appendix F · Agentic AI",
+      "title_html": "Appendix F · Agentic AI · A working introduction",
+      "aria": "Appendix F agentic AI presentation",
+      "blurb": "The shift from an AI that answers to one that acts: the agent loop, tools, and how much autonomy to give it.",
+      "audience": "Cambio teams",
+      "reading": "~9 min",
+      "brandmark_label": "Vibe Coding · F",
+      "brandmark_svg": "<svg width=\"24\" height=\"22\" viewBox=\"0 0 24 22\" fill=\"none\"><path d=\"M19 7a8 8 0 1 0 1.5 6\" stroke=\"#6F7F6A\" stroke-width=\"1.8\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M19 3v4h-4\" stroke=\"#6F7F6A\" stroke-width=\"1.8\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"11\" cy=\"11\" r=\"3\" fill=\"#8FA9B8\"/><circle cx=\"11\" cy=\"11\" r=\"1.2\" fill=\"#FFF\"/></svg>",
+      "title_mark_svg": "<svg width=\"76\" height=\"52\" viewBox=\"0 0 76 52\" fill=\"none\"><path d=\"M52 16a18 18 0 1 0 3.4 13\" stroke=\"#6F7F6A\" stroke-width=\"3.4\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M52 6v11H41\" stroke=\"#6F7F6A\" stroke-width=\"3.4\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"34\" cy=\"28\" r=\"7\" fill=\"#8FA9B8\"/><circle cx=\"34\" cy=\"28\" r=\"2.6\" fill=\"#FFF\"/><path d=\"M68 8l1.4 3.2 3.2 1.4-3.2 1.4L68 18l-1.4-3.2L63.4 13l3.2-1.4z\" fill=\"#C9BAA6\"/></svg>"
+    },
+    {
+      "source": "17-lovable-comparison.md",
+      "output": "17-lovable-comparison.html",
+      "title": "Appendix G · Lovable vs. our approach",
+      "title_html": "Appendix G · Lovable vs. Our Approach · A working introduction",
+      "aria": "Appendix G Lovable comparison presentation",
+      "blurb": "Managed versus owned: how a hosted app builder compares with vibe coding in your own editor, and when to use each.",
+      "audience": "Cambio teams",
+      "reading": "~8 min",
+      "brandmark_label": "Vibe Coding · G",
+      "brandmark_svg": "<svg width=\"24\" height=\"22\" viewBox=\"0 0 24 22\" fill=\"none\"><rect x=\"2\" y=\"5\" width=\"9\" height=\"12\" rx=\"1.6\" fill=\"#8FA9B8\"/><rect x=\"13\" y=\"5\" width=\"9\" height=\"12\" rx=\"1.6\" fill=\"#6F7F6A\"/><path d=\"M12 3v16\" stroke=\"#C9BAA6\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-dasharray=\"2 2\"/></svg>",
+      "title_mark_svg": "<svg width=\"78\" height=\"52\" viewBox=\"0 0 78 52\" fill=\"none\"><rect x=\"6\" y=\"10\" width=\"28\" height=\"32\" rx=\"3\" fill=\"#8FA9B8\" opacity=\"0.92\"/><rect x=\"40\" y=\"10\" width=\"28\" height=\"32\" rx=\"3\" fill=\"#6F7F6A\" opacity=\"0.92\"/><path d=\"M37 6v40\" stroke=\"#C9BAA6\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-dasharray=\"3 3\"/><path d=\"M14 20h12M14 27h9M46 20h12M46 27h9\" stroke=\"#FFF\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg>"
     }
   ]
 }

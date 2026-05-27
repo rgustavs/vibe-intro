@@ -650,3 +650,54 @@ ul.checklist li .meta {
   .counter { right: 22px; }
   .anatomy { gap: var(--space-lg); }
 }
+
+/* ---------- mobile & short viewports ---------- */
+/* On phones (and short landscape windows) a slide is often taller than the
+   screen. The default centred, clipped layout hides that overflow, so here we
+   top-align the slide and let it scroll instead. */
+@media (max-width: 760px), (max-height: 600px) {
+  .slide {
+    justify-content: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 60px 20px 96px;
+  }
+  .slide.example { padding-top: 60px; padding-bottom: 96px; }
+
+  /* Edge tap-zones sit above the slide and would swallow vertical scroll
+     gestures; navigation stays available via swipe and the nav buttons. */
+  .tapzone { display: none; }
+
+  /* The dot rail can hold ~19 dots — too wide for a phone. The counter in the
+     top corner already shows position, so drop the dots on small screens. */
+  .nav .dots { display: none; }
+
+  /* Tighten vertical rhythm so more fits before scrolling. */
+  h2.heading { margin-bottom: var(--space-md); }
+  .stack > * + * { margin-top: var(--space-md); }
+  .title-mark { margin-bottom: var(--space-lg); }
+  .title-meta { margin-top: var(--space-xl); gap: var(--space-lg); }
+
+  /* Worked-example code panels: flow within the scrolling slide rather than
+     becoming a nested scroll box, and let over-long code lines scroll sideways
+     instead of breaking the layout. */
+  .example-grid .prompt-block { max-height: none; overflow-y: visible; }
+  .prompt-block { overflow-x: auto; }
+
+  /* Compact takeaways numbering. */
+  .takeaways { grid-template-columns: 48px 1fr; gap: var(--space-sm) var(--space-md); }
+  .takeaways .num { font-size: 26px; }
+
+  /* Keep the top chrome from colliding on narrow screens, and give the corner
+     labels the page colour behind them so slide content scrolling underneath
+     stays masked rather than bleeding through. */
+  .brandmark, .counter {
+    font-size: 10px;
+    background: var(--color-background);
+    padding: 4px 8px;
+    border-radius: var(--radius-pill);
+  }
+  .brandmark { gap: 7px; left: 14px; }
+  .counter { right: 14px; }
+}
