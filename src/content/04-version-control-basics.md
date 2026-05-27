@@ -166,7 +166,118 @@ git restore .
 
 @@
 type: default
-eyebrow: 05 · Pitfalls
+eyebrow: 05 · Working together
+title: From one viber to a *task force.*
+@@
+:::html
+<div class="grid-2 reveal">
+  <div class="stack">
+    <p class="body">Single-player vibe coding is simple: you change, you commit, you push. Add a second viber — each with their own agent — and you can now overwrite each other's work without noticing.</p>
+    <p class="body subtext">Everything from this chapter still holds. Collaboration just adds one golden rule, and the tools (branches and pull requests) you already have are exactly what enforce it.</p>
+  </div>
+  <div class="card">
+    <div class="label">The golden rule</div>
+    <div class="title">Main is always shippable</div>
+    <p>Nobody vibe-codes directly on main. It stays the version that works — the shared ground everyone branches from and returns to.</p>
+  </div>
+</div>
+:::
+
+===
+
+@@
+type: default
+eyebrow: Principle 2
+title: A branch *per viber.*
+@@
+:::html
+<div class="grid-2 reveal">
+  <p class="body">Branches stopped being just for risky experiments — now they keep people out of each other's way. Each viber takes their own branch off main, lets their agent work there, and main stays untouched until the work is reviewed.</p>
+  <div class="prompt-block good">
+<span class="tag">branches</span>
+<span class="k">main</span>            <span class="c"># always works</span>
+ ├─ <span class="k">sara/export-csv</span>   <span class="c"># Sara + agent</span>
+ ├─ <span class="k">tom/login-page</span>    <span class="c"># Tom + agent</span>
+ └─ <span class="k">you/rota-tool</span>     <span class="c"># you + agent</span>
+
+<span class="c"># Three people building at once,</span>
+<span class="c"># nobody overwriting anybody.</span>
+  </div>
+</div>
+<p class="lede reveal" style="margin-top: var(--space-lg);">One branch, one job, one viber. Keep them small and short-lived.</p>
+:::
+
+===
+
+@@
+type: default
+eyebrow: 06 · Pull requests
+title: Propose, *review*, then merge.
+@@
+:::anatomy
+- Open a PR | Ask to merge your branch into main | A pull request is exactly that — a request to pull your work in.
+- middle: Review the diff | A teammate reads what changed before it lands | A second pair of eyes catches what your agent missed.
+- middle: Discuss & adjust | Comments go on the PR; the agent revises | The branch updates; main is still untouched.
+- bottom: Merge | Approved work joins main | Now everyone branches from the new, better main.
+lede: A pull request is the front door to main. Nothing gets in without a knock and a look.
+:::
+
+===
+
+@@
+type: default
+eyebrow: Principle 3
+title: When two agents *collide.*
+@@
+:::html
+<div class="grid-2 reveal">
+  <div class="stack">
+    <p class="body">If two vibers change the <em>same lines</em> of the same file, Git can't guess who's right. That's a <em>merge conflict</em> — and it's a normal event, not a disaster.</p>
+    <p class="body subtext">The fix is calm: your agent can resolve most conflicts if you ask it to keep both intentions. The real prevention is staying close to main — pull the latest main into your branch often, so collisions are small.</p>
+  </div>
+  <div class="card">
+    <div class="label">Staying out of trouble</div>
+    <ul class="dotlist" style="margin-top: 8px;">
+      <li>Pull main into your branch daily</li>
+      <li>Keep branches small — merge within a day or two</li>
+      <li>Split work so two people rarely touch one file</li>
+      <li class="muted">Conflict anyway? "Resolve this, keep both changes" — then test.</li>
+    </ul>
+  </div>
+</div>
+:::
+
+===
+
+@@
+type: default
+eyebrow: 07 · Shared context
+title: Keep every agent *on the same page.*
+@@
+:::html
+<div class="grid-2 reveal">
+  <div class="stack">
+    <p class="body">Different agents will happily invent different names, styles and patterns. Left alone, a task force produces a patchwork. A shared <em>context file</em> in the repo — the conventions, the stack, the rules — gives every viber's agent the same brief.</p>
+    <p class="body subtext">Pair that with a shared quality bar. Agreeing a target like <strong>50% test coverage</strong> — how much of the app is checked by automated tests — means each branch must keep its share of tests passing before it merges, so parallel work stays safe to combine.</p>
+  </div>
+  <div class="card">
+    <div class="label">The shared brief, in the repo</div>
+    <ul class="dotlist" style="margin-top: 8px;">
+      <li>The stack and conventions (chapter five)</li>
+      <li>The behaviour spec everyone builds to (chapter six)</li>
+      <li>A coverage target every branch must hold</li>
+      <li class="muted">"Read the project conventions before you start."</li>
+    </ul>
+  </div>
+</div>
+<p class="lede reveal" style="margin-top: var(--space-lg);">Shared context in, consistent code out — even from a dozen different agents.</p>
+:::
+
+===
+
+@@
+type: default
+eyebrow: 08 · Pitfalls
 title: Easy *mistakes* to skip.
 @@
 :::html
@@ -187,12 +298,13 @@ title: Easy *mistakes* to skip.
 @@
 type: takeaways
 eyebrow: In closing
-title: Four things to *remember.*
+title: Five things to *remember.*
 @@
 :::takeaways
 A commit is a save point; the history is your way back.
 Build the habit: change, review, commit, push.
 Use a branch to experiment safely while main stays stable.
 Write short, specific commit messages for future-you.
-lede: A safety net. So you can be brave.
+Collaborating? A branch per viber, pull requests into main, and a shared context file.
+lede: A safety net. So you can be brave — together.
 :::
