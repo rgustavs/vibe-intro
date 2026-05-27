@@ -1,6 +1,6 @@
 @@
 type: title
-eyebrow: A working introduction · chapter one
+eyebrow: A working introduction · chapter two
 title: What is|*Vibe Coding?*
 @@
 A practical way to build software by describing what you want —|and letting an AI agent write the code.
@@ -84,7 +84,7 @@ title: Five ingredients of a good session.
 - Context | What the agent should know | The files, the goal, and any constraints.
 - Small steps | One change at a time | Easier to review, easier to undo.
 - Review | You read the result | You stay the author and the editor.
-- Save points | Commit working versions | Your safety net — see chapter 03.
+- Save points | Commit working versions | Your safety net — see chapter 06.
 lede: Give the agent intent and context — then keep it on a short leash.
 :::
 
@@ -201,7 +201,7 @@ title: Where beginners *get stuck.*
     <div class="card"><div class="title" style="font-size: 19px;">Accepting blindly</div><p>Clicking "accept" without running or reading. Bugs pile up silently. Always check the result.</p></div>
   </div>
   <div class="stack-sm">
-    <div class="card"><div class="title" style="font-size: 19px;">No save points</div><p>Hours of changes with no way back. Commit working versions so you can always undo — chapter 03.</p></div>
+    <div class="card"><div class="title" style="font-size: 19px;">No save points</div><p>Hours of changes with no way back. Commit working versions so you can always undo — chapter 06.</p></div>
     <div class="card"><div class="title" style="font-size: 19px;">Vague feedback</div><p>"It's broken." Instead: what you did, what you expected, and what actually happened.</p></div>
   </div>
 </div>

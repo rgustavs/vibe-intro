@@ -1,6 +1,6 @@
 @@
 type: title
-eyebrow: A working introduction · chapter five
+eyebrow: A working introduction · chapter seven
 title: The Vibe-Coded|*Stack.*
 @@
 How AI puts full-stack architecture together —|Node.js, FastAPI, and SQLite.

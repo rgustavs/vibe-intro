@@ -9,15 +9,15 @@ This training is designed to transition Cambio teams from traditional product ma
 
 ### 1. Understanding the Agentic Shift
 - **Concept:** Why agents are different from chat models. An agent doesn't just answer; it acts.
-- **Reference:** `agent-presentation.html` (Understanding AI Agents)
+- **Reference:** `src/content/01-the-agentic-shift.md` (source material: `agent-presentation.html`)
 
 ### 2. The Vibe Coding Mindset
 - **Concept:** Describing outcomes, not syntax. The loop of Describe -> Generate -> Run -> Refine.
-- **Reference:** `src/content/01-what-is-vibe-coding.md`
+- **Reference:** `src/content/02-what-is-vibe-coding.md`
 
 ### 3. Setting Up the Workspace
 - **Action:** Installing and configuring VS Code and Antigravity. First prompt loops.
-- **Reference:** `src/content/02-setting-up-the-tools.md`
+- **Reference:** `src/content/03-setting-up-the-tools.md`
 
 ---
 
@@ -26,15 +26,15 @@ This training is designed to transition Cambio teams from traditional product ma
 
 ### 1. High-Resolution Prompting
 - **Concept:** Specificity, context, and "showing what good looks like."
-- **Reference:** `prompting-for-pms.html` (Prompting for PMs)
+- **Reference:** `src/content/04-high-resolution-prompting.md` (source material: `prompting-for-pms.html`)
 
 ### 2. Functional Modelling & Edge Cases
 - **Concept:** Using BDD (Given/When/Then) and mapping state transitions.
-- **Reference:** `src/content/04-functional-modelling.md`
+- **Reference:** `src/content/05-functional-modelling.md`
 
 ### 3. Adversarial Analysis (Brainstorm & Grill Me)
 - **Action:** Using specialized agent skills to find logical holes and contradictions in your requirements before generating code.
-- **Reference:** `Functional analysis .txt`
+- **Reference:** Covered as a section in `src/content/05-functional-modelling.md` (source material: `Functional analysis .txt`)
 
 ---
 
@@ -43,15 +43,15 @@ This training is designed to transition Cambio teams from traditional product ma
 
 ### 1. The Safety Net: Version Control
 - **Concept:** Commits as save points. Fearless experimentation using branches.
-- **Reference:** `src/content/03-version-control-basics.md`
+- **Reference:** `src/content/06-version-control-basics.md`
 
 ### 2. The Vibe-Coded Stack
 - **Concept:** Decoupling the UI (React), Logic (FastAPI), and Data (SQLite).
-- **Reference:** `src/content/05-vibe-coded-stack.md`, `Vibe coded stack .txt`
+- **Reference:** `src/content/07-vibe-coded-stack.md`, `Vibe coded stack .txt`
 
 ### 3. Trust & Evaluation
 - **Concept:** Evaluating the "trajectory" of an agent's work, not just the output. Handling agentic failure modes.
-- **Reference:** `agentic-ai-for-pms.html` (Agentic AI for PMs)
+- **Reference:** `src/content/08-trust-and-evaluation.md` (source material: `agentic-ai-for-pms.html`)
 
 ---
 

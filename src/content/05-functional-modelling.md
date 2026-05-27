@@ -1,6 +1,6 @@
 @@
 type: title
-eyebrow: A working introduction · chapter four
+eyebrow: A working introduction · chapter five
 title: Functional Modelling|*for builders.*
 @@
 AI builds exactly what you ask for.|How to write complete, consistent requirements so it builds the right thing.
@@ -370,6 +370,99 @@ haven't received?"
 ===
 
 @@
+type: default
+eyebrow: 05 · Adversarial analysis
+title: Attack the spec *before* the code.
+@@
+:::html
+<div class="grid-2 reveal">
+  <div class="stack">
+    <p class="body">A spec can read perfectly and still hide a contradiction you won't find until weeks after it ships. The two skills above aren't a one-off check — together they're a deliberate practice: <em>attack your own requirements before you generate a line of code.</em></p>
+    <p class="body subtext">A human reviewer would catch some of this, but only when they have time. An AI adversary does it instantly and exhaustively. Shift the validation left — to the spec, not the bug report.</p>
+  </div>
+  <div class="card">
+    <div class="label">Two moves, one practice</div>
+    <div class="title">Diverge, then converge</div>
+    <p><strong>Brainstorm</strong> opens the design surface — finds the states you missed.</p>
+    <p style="margin-top: 8px;"><strong>Grill Me</strong> closes it — finds the contradictions you wrote.</p>
+  </div>
+</div>
+:::
+
+===
+
+@@
+type: default
+eyebrow: Attack vectors
+title: Four ways to *break* a spec.
+@@
+:::html
+<div class="grid-2 reveal">
+  <div class="stack-sm">
+    <div class="card"><div class="title" style="font-size: 19px;">Rule contradictions</div><p>"Users can delete comments" vs "locked threads can't change." Which wins when both apply?</p></div>
+    <div class="card"><div class="title" style="font-size: 19px;">Impossible transitions</div><p>The state map allows Draft &rarr; Paid, skipping Sent. Can you pay an invoice never sent?</p></div>
+  </div>
+  <div class="stack-sm">
+    <div class="card"><div class="title" style="font-size: 19px;">Missing variables</div><p>"Send a notification." To whom? In-app or email? For every case, or only some?</p></div>
+    <div class="card"><div class="title" style="font-size: 19px;">Boundary violations</div><p>"Max 3 projects" vs "Pro users can request more." Do the extra ones count toward 3?</p></div>
+  </div>
+</div>
+:::
+
+===
+
+@@
+type: default
+eyebrow: The practice
+title: The adversarial *loop.*
+@@
+:::html
+<div class="grid-2 reveal">
+  <p class="body">Run it as a loop, not a single pass. After you fix the holes Grill Me found, run it again — your fixes often expose new ones. Stop when it makes a clean pass.</p>
+  <div class="loop-list">
+    <div class="loop-step"><span class="n">1</span><div><span class="t">Diverge</span><span class="d">Brainstorm the edge cases and missing states.</span></div></div>
+    <div class="loop-step"><span class="n">2</span><div><span class="t">Formalize</span><span class="d">Write them up as Given / When / Then.</span></div></div>
+    <div class="loop-step"><span class="n">3</span><div><span class="t">Converge</span><span class="d">Grill Me attacks the logic for holes.</span></div></div>
+    <div class="loop-step"><span class="n">4</span><div><span class="t">Iterate</span><span class="d">Fix, then re-grill until it's clean.</span></div></div>
+  </div>
+</div>
+<p class="lede reveal" style="margin-top: var(--space-lg);">Two hours sharpening the spec saves a day untangling the code.</p>
+:::
+
+===
+
+@@
+type: example
+eyebrow: Adversarial walk-through
+title: One spec, *grilled.*
+@@
+:::example
+lead:
+### From rough idea to airtight spec.
+Brainstorm surfaces the edges, you formalise them as BDD, then Grill Me finds the hole the formal spec still hid. The fix is cheap here — it would be expensive in shipped code.
+tags: Diverge, Formalize, Converge
+---
+tag: adversarial loop
+[h]Brainstorm surfaces:[/h]- Downgrade mid-cycle?
+- 5 projects, but Free allows 2?
+- Already paid for next cycle?
+
+[h]You formalize:[/h][k]GIVEN[/k] Pro user, 5 active projects
+[k]WHEN[/k] they downgrade to Free
+[k]THEN[/k] schedule change for cycle end
+  [k]AND[/k] don't lock projects now
+
+[h]Grill Me attacks:[/h]"On cycle end, Free allows 2 — so 3
+projects vanish with no warning.
+A UX disaster. What's the rule?"
+
+[h]You fix:[/h][ok]Warn 7 days before; archive
+projects 3–5; send confirmation.[/ok]
+:::
+
+===
+
+@@
 type: takeaways
 eyebrow: In closing
 title: Four things to *remember.*
@@ -377,7 +470,7 @@ title: Four things to *remember.*
 :::takeaways
 AI amplifies vagueness. The bottleneck is now exact requirement definition.
 Use BDD (Given/When/Then) to structure logic clearly for the agent.
-Use the *Brainstorm* skill to discover the negative paths and edge cases.
-Use the *Grill Me* skill to aggressively QA your logic before generating code.
+Run the adversarial loop: *Brainstorm* to diverge, *Grill Me* to converge — then iterate.
+Attack the spec before you generate code; a clean spec is cheaper than a shipped bug.
 lede: Rigorous thinking. Flawless execution.
 :::
