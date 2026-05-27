@@ -51,9 +51,9 @@
       "title": "Version control basics",
       "title_html": "Version Control Basics · A working introduction",
       "aria": "Version control basics presentation",
-      "blurb": "Git and GitHub for non-coders: commits, branches, and the undo safety net.",
+      "blurb": "Git and GitHub for non-coders: commits, branches, the undo safety net, and collaborating as a task force.",
       "audience": "Cambio teams",
-      "reading": "~10 min",
+      "reading": "~13 min",
       "brandmark_label": "Vibe Coding · 04",
       "brandmark_svg": "<svg width=\"24\" height=\"22\" viewBox=\"0 0 24 22\" fill=\"none\"><path d=\"M7 4v14M7 10h7a3 3 0 0 0 3-3\" stroke=\"#6F7F6A\" stroke-width=\"1.8\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"7\" cy=\"4\" r=\"2.4\" fill=\"#6F7F6A\"/><circle cx=\"7\" cy=\"18\" r=\"2.4\" fill=\"#8FA9B8\"/><circle cx=\"17\" cy=\"5\" r=\"2.4\" fill=\"#C9BAA6\"/></svg>",
       "title_mark_svg": "<svg width=\"76\" height=\"52\" viewBox=\"0 0 76 52\" fill=\"none\"><path d=\"M16 8v36M16 26h26a8 8 0 0 0 8-8\" stroke=\"#6F7F6A\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"16\" cy=\"8\" r=\"6\" fill=\"#6F7F6A\"/><circle cx=\"16\" cy=\"44\" r=\"6\" fill=\"#8FA9B8\"/><circle cx=\"54\" cy=\"14\" r=\"6\" fill=\"#C9BAA6\"/></svg>"
@@ -124,8 +124,21 @@
       "title_mark_svg": "<svg width=\"80\" height=\"50\" viewBox=\"0 0 80 50\" fill=\"none\"><rect x=\"6\" y=\"30\" width=\"12\" height=\"16\" rx=\"2\" fill=\"#8FA9B8\" opacity=\"0.92\"/><rect x=\"24\" y=\"20\" width=\"12\" height=\"26\" rx=\"2\" fill=\"#6F7F6A\" opacity=\"0.92\"/><rect x=\"42\" y=\"10\" width=\"12\" height=\"36\" rx=\"2\" fill=\"#6F7F6A\" opacity=\"0.92\"/><path d=\"M12 26 L30 16 L48 6\" stroke=\"#A8BDB6\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M66 8l1.4 3.2 3.2 1.4-3.2 1.4L66 18l-1.4-3.2L61.4 13l3.2-1.4z\" fill=\"#C9BAA6\"/></svg>"
     },
     {
-      "source": "10-prompt-patterns.md",
-      "output": "10-prompt-patterns.html",
+      "source": "10-owning-what-you-built.md",
+      "output": "10-owning-what-you-built.html",
+      "title": "Owning what you built",
+      "title_html": "Owning What You Built · A working introduction",
+      "aria": "Owning what you built presentation",
+      "blurb": "Life after launch: the four-quadrant ownership model and ITIL basics that stop experiments becoming orphaned debt.",
+      "audience": "Cambio teams",
+      "reading": "~10 min",
+      "brandmark_label": "Vibe Coding · 10",
+      "brandmark_svg": "<svg width=\"24\" height=\"22\" viewBox=\"0 0 24 22\" fill=\"none\"><rect x=\"3\" y=\"3\" width=\"8\" height=\"7\" rx=\"1.5\" fill=\"#8FA9B8\"/><rect x=\"13\" y=\"3\" width=\"8\" height=\"7\" rx=\"1.5\" fill=\"#6F7F6A\"/><rect x=\"3\" y=\"12\" width=\"8\" height=\"7\" rx=\"1.5\" fill=\"#A8BDB6\"/><rect x=\"13\" y=\"12\" width=\"8\" height=\"7\" rx=\"1.5\" fill=\"#C9BAA6\"/><path d=\"M15.4 6.3l1.1 1.1 2.1-2.2\" stroke=\"#FFF\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/></svg>",
+      "title_mark_svg": "<svg width=\"80\" height=\"52\" viewBox=\"0 0 80 52\" fill=\"none\"><rect x=\"6\" y=\"6\" width=\"28\" height=\"18\" rx=\"3\" fill=\"#8FA9B8\" opacity=\"0.92\"/><rect x=\"38\" y=\"6\" width=\"28\" height=\"18\" rx=\"3\" fill=\"#6F7F6A\" opacity=\"0.92\"/><rect x=\"6\" y=\"28\" width=\"28\" height=\"18\" rx=\"3\" fill=\"#A8BDB6\" opacity=\"0.92\"/><rect x=\"38\" y=\"28\" width=\"28\" height=\"18\" rx=\"3\" fill=\"#C9BAA6\" opacity=\"0.92\"/><path d=\"M45 15l3.2 3.2 6-6.4\" stroke=\"#FFF\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/><path d=\"M72 8l1.4 3.2 3.2 1.4-3.2 1.4L72 18l-1.4-3.2L67.4 13l3.2-1.4z\" fill=\"#C9BAA6\"/></svg>"
+    },
+    {
+      "source": "11-prompt-patterns.md",
+      "output": "11-prompt-patterns.html",
       "title": "Appendix A · Prompt patterns",
       "title_html": "Appendix A · Prompt Patterns · A working introduction",
       "aria": "Appendix A prompt patterns presentation",
@@ -137,8 +150,8 @@
       "title_mark_svg": "<svg width=\"80\" height=\"50\" viewBox=\"0 0 80 50\" fill=\"none\"><path d=\"M6 6h52a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H26l-12 8v-8H6a6 6 0 0 1-6-6V12a6 6 0 0 1 6-6z\" fill=\"#8FA9B8\" opacity=\"0.92\"/><path d=\"M22 18l-6 6 6 6M44 18l6 6-6 6M37 16l-4 16\" stroke=\"#FFF\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\"/><path d=\"M72 8l1.4 3.2 3.2 1.4-3.2 1.4L72 18l-1.4-3.2L67.4 13l3.2-1.4z\" fill=\"#C9BAA6\"/></svg>"
     },
     {
-      "source": "11-glossary.md",
-      "output": "11-glossary.html",
+      "source": "12-glossary.md",
+      "output": "12-glossary.html",
       "title": "Appendix B · Glossary",
       "title_html": "Appendix B · Plain-English Glossary · A working introduction",
       "aria": "Appendix B glossary presentation",
@@ -150,8 +163,8 @@
       "title_mark_svg": "<svg width=\"80\" height=\"50\" viewBox=\"0 0 80 50\" fill=\"none\"><rect x=\"6\" y=\"6\" width=\"60\" height=\"40\" rx=\"5\" fill=\"#6F7F6A\" opacity=\"0.92\"/><path d=\"M36 6v40\" stroke=\"#FFF\" stroke-width=\"2\"/><path d=\"M14 18h14M14 26h14M14 34h10M44 18h14M44 26h14M44 34h10\" stroke=\"#FFF\" stroke-width=\"2\" stroke-linecap=\"round\"/><path d=\"M72 8l1.4 3.2 3.2 1.4-3.2 1.4L72 18l-1.4-3.2L67.4 13l3.2-1.4z\" fill=\"#C9BAA6\"/></svg>"
     },
     {
-      "source": "12-troubleshooting.md",
-      "output": "12-troubleshooting.html",
+      "source": "13-troubleshooting.md",
+      "output": "13-troubleshooting.html",
       "title": "Appendix C · Troubleshooting",
       "title_html": "Appendix C · Troubleshooting · A working introduction",
       "aria": "Appendix C troubleshooting presentation",
@@ -163,8 +176,8 @@
       "title_mark_svg": "<svg width=\"80\" height=\"50\" viewBox=\"0 0 80 50\" fill=\"none\"><path d=\"M30 6 L54 44 H6 Z\" fill=\"#C9BAA6\" opacity=\"0.92\"/><path d=\"M30 20v12\" stroke=\"#6F7F6A\" stroke-width=\"3\" stroke-linecap=\"round\"/><circle cx=\"30\" cy=\"38\" r=\"2.2\" fill=\"#6F7F6A\"/><path d=\"M66 10l1.4 3.2 3.2 1.4-3.2 1.4L66 20l-1.4-3.2L61.4 15l3.2-1.4z\" fill=\"#8FA9B8\"/></svg>"
     },
     {
-      "source": "13-secrets-and-safety.md",
-      "output": "13-secrets-and-safety.html",
+      "source": "14-secrets-and-safety.md",
+      "output": "14-secrets-and-safety.html",
       "title": "Appendix D · Secrets & safety",
       "title_html": "Appendix D · Secrets & Safety · A working introduction",
       "aria": "Appendix D secrets and safety presentation",
@@ -176,8 +189,8 @@
       "title_mark_svg": "<svg width=\"76\" height=\"52\" viewBox=\"0 0 76 52\" fill=\"none\"><rect x=\"14\" y=\"22\" width=\"40\" height=\"28\" rx=\"5\" fill=\"#6F7F6A\" opacity=\"0.92\"/><path d=\"M20 22v-6a14 14 0 0 1 28 0v6\" stroke=\"#6F7F6A\" stroke-width=\"4\" fill=\"none\" opacity=\"0.92\"/><circle cx=\"34\" cy=\"34\" r=\"4\" fill=\"#FFF\"/><path d=\"M34 34v7\" stroke=\"#FFF\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M64 8l1.4 3.2 3.2 1.4-3.2 1.4L64 18l-1.4-3.2L59.4 13l3.2-1.4z\" fill=\"#C9BAA6\"/></svg>"
     },
     {
-      "source": "14-models-and-tokens.md",
-      "output": "14-models-and-tokens.html",
+      "source": "15-models-and-tokens.md",
+      "output": "15-models-and-tokens.html",
       "title": "Appendix E · Models & tokens",
       "title_html": "Appendix E · Models & Tokens · A working introduction",
       "aria": "Appendix E models and tokens presentation",
