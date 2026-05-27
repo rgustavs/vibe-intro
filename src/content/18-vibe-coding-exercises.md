@@ -3,7 +3,7 @@ type: title
 eyebrow: A working introduction · appendix H
 title: Vibe Coding|*Exercises.*
 @@
-Six projects to build end to end —|each one a real brief, with the business conditions spelled out.
+Seven projects to build end to end —|each one a real brief, with the business conditions spelled out.
 
 ===
 
@@ -15,7 +15,7 @@ title: Pick one and *build it.*
 :::html
 <div class="grid-2 reveal" style="margin-top: var(--space-md);">
   <div class="stack">
-    <p class="body">Each of the next six slides is a self-contained project — one per page. Read the brief, then run the same <code>describe → run → review → refine</code> loop from chapter one until it works.</p>
+    <p class="body">Each of the next seven slides is a self-contained project — one per page. Read the brief, then run the same <code>describe → run → review → refine</code> loop from chapter one until it works.</p>
     <p class="body subtext">Use our usual setup: <strong>VS Code + Antigravity</strong>, and the <strong>React / FastAPI / SQLite</strong> stack. Start with the smallest version that runs, then add one condition at a time.</p>
   </div>
   <div class="card">
@@ -199,6 +199,31 @@ tag: copy & adapt
 ===
 
 @@
+type: example
+eyebrow: Project · 07 · Optimising
+title: Kubernetes *cost optimiser.*
+@@
+:::example
+lead:
+### Find the waste in a cluster and right-size it.
+Build a tool that spots over-provisioned workloads and recommends savings. Business conditions: inputs are per-workload requested vs actual CPU and memory, replica counts, and node types with their hourly cost; flag workloads requesting far more than they use and nodes sitting idle; recommend right-sized requests while keeping a configurable headroom (say 20%); group results by namespace or team and estimate the monthly saving.
+tags: requests vs usage, 20% headroom, by namespace
+**Done when:** upload usage data and see right-sizing recommendations with projected monthly savings.
+---
+tag: copy & adapt
+[h]Goal[/h]Build a {{Kubernetes cost optimiser}} from
+{{requested vs actual}} CPU/memory per workload.
+
+[h]Flag[/h][k]Over-provisioned[/k] workloads and
+[k]idle nodes[/k]; recommend right-sized requests.
+
+[h]Done when[/h]Per-namespace [k]savings[/k] keep a
+{{20% headroom}} and show a [k]monthly total[/k].
+:::
+
+===
+
+@@
 type: takeaways
 eyebrow: In closing
 title: Four things to *carry over.*
@@ -208,5 +233,5 @@ A sharp brief beats a clever prompt — pin down the scale, the rules, and the "
 Build the smallest version that runs, then add one business condition at a time.
 Real numbers (100 people, a fill rate, an adoption %) make the agent build the right thing.
 Run and check each condition before the next — the same describe → run → review → refine loop.
-lede: Six projects, one habit: describe the real conditions, and let the agent do the building.
+lede: Seven projects, one habit: describe the real conditions, and let the agent do the building.
 :::
