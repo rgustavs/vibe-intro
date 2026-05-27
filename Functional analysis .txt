@@ -1,0 +1,1087 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<title>Functional Analysis for PMs · A working introduction</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ---------- design tokens ---------- */
+:root {
+  --color-background: #F7F4EE;
+  --color-surface: #FFFFFF;
+  --color-panel: #F2F2EF;
+  --color-text: #22201D;
+  --color-subtext: #5A5F5B;
+  --color-border: #E3E6E1;
+  --color-accent-pine: #6F7F6A;
+  --color-accent-fjord: #8FA9B8;
+  --color-mist: #A8BDB6;
+  --color-clay: #C9BAA6;
+  --color-sand: #E6E2D8;
+  --color-ink: #22201D;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-code: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'ss01', 'cv11';
+}
+
+/* ---------- structural ---------- */
+.deck {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.progress {
+  position: absolute;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--color-accent-pine);
+  width: 0;
+  transition: width 380ms cubic-bezier(.4,0,.2,1);
+  z-index: 10;
+  opacity: .85;
+}
+
+.brandmark {
+  position: absolute;
+  top: var(--space-lg);
+  left: var(--space-xl);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-subtext);
+  z-index: 5;
+}
+.brandmark svg { display: block; }
+
+.counter {
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-xl);
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--color-subtext);
+  z-index: 5;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- slides ---------- */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(48px, 7vw, 96px) clamp(28px, 7vw, 96px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 420ms cubic-bezier(.4,0,.2,1), transform 420ms cubic-bezier(.4,0,.2,1), visibility 0s linear 420ms;
+}
+.slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 520ms cubic-bezier(.4,0,.2,1), transform 520ms cubic-bezier(.4,0,.2,1), visibility 0s;
+}
+
+.slide.is-active .reveal {
+  animation: rise 700ms cubic-bezier(.2,.7,.2,1) both;
+}
+.slide.is-active .reveal:nth-child(1) { animation-delay: 60ms; }
+.slide.is-active .reveal:nth-child(2) { animation-delay: 160ms; }
+.slide.is-active .reveal:nth-child(3) { animation-delay: 260ms; }
+.slide.is-active .reveal:nth-child(4) { animation-delay: 360ms; }
+.slide.is-active .reveal:nth-child(5) { animation-delay: 460ms; }
+.slide.is-active .reveal:nth-child(6) { animation-delay: 540ms; }
+.slide.is-active .reveal:nth-child(7) { animation-delay: 620ms; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- typography ---------- */
+.eyebrow {
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent-pine);
+  margin-bottom: var(--space-md);
+}
+h1.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(40px, 7.5vw, 80px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+}
+h1.display em {
+  font-style: italic;
+  color: var(--color-accent-pine);
+  font-weight: 300;
+}
+h2.heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 4.6vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+  margin-bottom: var(--space-lg);
+}
+h2.heading em {
+  font-style: italic;
+  color: var(--color-accent-pine);
+  font-weight: 300;
+}
+.lede {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(20px, 2.4vw, 28px);
+  line-height: 1.4;
+  color: var(--color-subtext);
+  max-width: 62ch;
+}
+.body {
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.6;
+  color: var(--color-text);
+  max-width: 62ch;
+}
+.subtext { color: var(--color-subtext); }
+
+/* ---------- composition ---------- */
+.stack > * + * { margin-top: var(--space-lg); }
+.stack-sm > * + * { margin-top: var(--space-sm); }
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+@media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(20px, 2.4vw, 32px);
+}
+.card .label {
+  font-family: var(--font-code);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent-pine);
+  margin-bottom: 8px;
+}
+.card .title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  color: var(--color-text);
+}
+.card p { color: var(--color-subtext); font-size: 15px; line-height: 1.55; }
+
+.prompt-block {
+  background: #F7F7F4;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  font-family: var(--font-code);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  position: relative;
+}
+.prompt-block .tag {
+  position: absolute;
+  top: 10px; right: 14px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-subtext);
+}
+.prompt-block.bad { background: #FAF6F2; }
+.prompt-block.bad .tag { color: #b07a52; }
+.prompt-block.good .tag { color: var(--color-accent-pine); }
+.prompt-block .k { color: var(--color-accent-pine); }
+.prompt-block .c { color: var(--color-subtext); font-style: italic; }
+.prompt-block .arr { color: var(--color-accent-fjord); }
+
+ul.dotlist { list-style: none; padding: 0; }
+ul.dotlist li {
+  position: relative;
+  padding-left: 22px;
+  margin: 10px 0;
+  color: var(--color-text);
+  font-size: clamp(15px, 1.3vw, 17px);
+  line-height: 1.55;
+}
+ul.dotlist li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.62em;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-pine);
+}
+ul.dotlist li.muted::before { background: var(--color-mist); }
+
+/* ---------- title slide ---------- */
+.title-slide { align-items: flex-start; }
+.title-mark { margin-bottom: var(--space-xl); }
+.title-meta {
+  margin-top: var(--space-2xl);
+  display: flex;
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-subtext);
+}
+.title-meta span strong {
+  color: var(--color-text);
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+/* ---------- anatomy diagram ---------- */
+.anatomy {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--space-xl);
+  align-items: center;
+}
+@media (max-width: 880px) { .anatomy { grid-template-columns: 1fr; } }
+.anatomy-stack { display: flex; flex-direction: column; gap: 8px; }
+.anatomy-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: var(--space-md);
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.anatomy-row .pill {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-pine);
+  background: #EEF1EA;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  text-align: center;
+  width: max-content;
+}
+.anatomy-row p { font-size: 14.5px; color: var(--color-text); }
+.anatomy-row p span { color: var(--color-subtext); }
+
+/* ---------- takeaways ---------- */
+.takeaways {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: var(--space-md) var(--space-lg);
+  align-items: baseline;
+  max-width: 760px;
+}
+.takeaways .num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 36px;
+  color: var(--color-accent-pine);
+  line-height: 1;
+}
+.takeaways .t {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--color-text);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+.takeaways > *:nth-last-child(-n+2) .t,
+.takeaways > *:nth-last-child(-n+2).t { border-bottom: none; }
+
+/* ---------- nav ---------- */
+.nav {
+  position: absolute;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 6;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 6px 8px;
+}
+.nav button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  color: var(--color-text);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav button:hover { background: #EEF1EA; }
+.nav button:active { background: #E3E6E1; }
+.nav button[disabled] { opacity: 0.3; cursor: default; }
+.nav button[disabled]:hover { background: transparent; }
+.nav .dots { display: flex; gap: 6px; padding: 0 6px; }
+.nav .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-border);
+  transition: background 220ms ease, transform 220ms ease;
+}
+.nav .dot.is-active {
+  background: var(--color-accent-pine);
+  transform: scale(1.25);
+}
+
+.tapzone {
+  position: absolute;
+  top: 0; bottom: 80px;
+  width: 22%;
+  z-index: 4;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.tapzone.left { left: 0; }
+.tapzone.right { right: 0; }
+.tapzone::after {
+  content: '';
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid var(--color-border);
+}
+.tapzone.left::after  { left: 24px; }
+.tapzone.right::after { right: 24px; }
+@media (hover: hover) { .tapzone:hover::after { opacity: 1; } }
+
+.hint {
+  position: absolute;
+  bottom: 92px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-code);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-subtext);
+  opacity: 0;
+  animation: hintFade 4.5s 1.4s ease forwards;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 5;
+}
+@keyframes hintFade {
+  0%   { opacity: 0; transform: translate(-50%, 6px); }
+  18%  { opacity: 0.9; transform: translate(-50%, 0); }
+  78%  { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+/* ---------- example slides ---------- */
+.slide.example {
+  padding-top: clamp(64px, 8vh, 96px);
+  padding-bottom: clamp(80px, 10vh, 110px);
+}
+.example-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(20px, 3vw, 44px);
+  align-items: stretch;
+}
+@media (max-width: 880px) { .example-grid { grid-template-columns: 1fr; } }
+.example-grid .lead { display: flex; flex-direction: column; justify-content: center; }
+.example-grid .lead h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(22px, 2.6vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+  margin-bottom: 14px;
+}
+.example-grid .lead h3 em { font-style: italic; color: var(--color-accent-pine); }
+.example-grid .lead p {
+  color: var(--color-subtext);
+  font-size: 14.5px;
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.example-grid .lead ul.tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 0;
+}
+.example-grid .lead ul.tags li {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-pine);
+  background: #EEF1EA;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+.example-grid .prompt-block {
+  font-size: 12.5px;
+  line-height: 1.62;
+  max-height: 64vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: 30px;
+}
+.example-grid .prompt-block .h {
+  display: block;
+  color: var(--color-accent-pine);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+  text-transform: uppercase;
+  margin: 14px 0 4px;
+}
+.example-grid .prompt-block .h:first-child { margin-top: 0; }
+
+@media (max-width: 900px) {
+  .brandmark, .counter { top: 16px; }
+  .brandmark { left: 22px; }
+  .counter { right: 22px; }
+  .anatomy { gap: var(--space-lg); }
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck" role="region" aria-label="Functional Analysis for PMs presentation">
+
+  <div class="progress" id="progress"></div>
+
+  <div class="brandmark" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="3" width="6" height="6" rx="1" fill="#6F7F6A"/>
+      <rect x="15" y="3" width="6" height="6" rx="1" fill="#A8BDB6"/>
+      <rect x="3" y="15" width="6" height="6" rx="1" fill="#8FA9B8"/>
+      <rect x="15" y="15" width="6" height="6" rx="1" fill="#6F7F6A"/>
+      <path d="M9 6h6 M6 9v6 M15 18h-6" stroke="#C9BAA6" stroke-width="1.5" stroke-dasharray="2 2"/>
+    </svg>
+    <span>Analysis · for PMs</span>
+  </div>
+  <div class="counter" id="counter">01 / 15</div>
+
+  <!-- =================== SLIDE 1 · TITLE =================== -->
+  <section class="slide title-slide is-active" data-slide="1">
+    <div class="title-mark reveal" aria-hidden="true">
+      <svg width="80" height="50" viewBox="0 0 80 50" fill="none">
+        <rect x="4" y="20" width="16" height="16" rx="2" fill="#6F7F6A"/>
+        <path d="M22 28h12" stroke="#A8BDB6" stroke-width="2" stroke-linecap="round"/>
+        <rect x="36" y="4" width="16" height="16" rx="2" fill="#8FA9B8"/>
+        <rect x="36" y="36" width="16" height="16" rx="2" fill="#C9BAA6"/>
+        <path d="M54 12h12 M54 44h12 M66 12v32" stroke="#A8BDB6" stroke-width="2" stroke-linecap="round"/>
+        <rect x="68" y="20" width="12" height="16" rx="2" fill="#6F7F6A"/>
+      </svg>
+    </div>
+    <div class="eyebrow reveal">A working introduction · part five</div>
+    <h1 class="display reveal">Functional Analysis<br/><em>for PMs.</em></h1>
+    <p class="lede reveal" style="margin-top: var(--space-lg);">AI builds exactly what you ask for.<br/>How to build complete, consistent requirements so it builds the right thing.</p>
+    <div class="title-meta reveal">
+      <span>Audience <strong>Product Managers</strong></span>
+      <span>Length <strong>15 slides</strong></span>
+      <span>Reading <strong>~12 min</strong></span>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 2 · WHY =================== -->
+  <section class="slide" data-slide="2">
+    <div class="eyebrow reveal">01 · Why this matters</div>
+    <h2 class="heading reveal">AI amplifies <em>bad requirements.</em></h2>
+    <div class="grid-2 reveal" style="margin-top: var(--space-md);">
+      <div class="stack">
+        <p class="body">In the past, if you wrote a vague spec, a human engineer would walk over to your desk and ask, "What happens if the user has no data?"</p>
+        <p class="body subtext">An AI won't ask. It will invent a solution. Often, it will invent a hallucinated logic loop that takes hours to untangle. The bottleneck has shifted from <em>writing code</em> to <em>defining exact behavior</em>.</p>
+      </div>
+      <div class="card">
+        <div class="label">Human Developer</div>
+        <div class="title">Implicit translation</div>
+        <p>Humans fill in the gaps using common sense and organizational context.</p>
+        <div class="label" style="margin-top: 20px;">AI Developer</div>
+        <div class="title">Explicit execution</div>
+        <p>AI writes exactly what you specify. If the rules contradict, it writes conflicting code silently.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 3 · WHAT IS IT =================== -->
+  <section class="slide" data-slide="3">
+    <div class="eyebrow reveal">02 · Definition</div>
+    <h2 class="heading reveal">Breaking "ideas" into <em>functions.</em></h2>
+    <div class="grid-2 reveal">
+      <p class="body">Functional analysis is the process of taking a high-level feature ("Export to CSV") and breaking it down into a system of discrete inputs, logic rules, edge cases, and outputs.</p>
+      <div class="prompt-block good">
+<span class="c"># "Export to CSV" is not a spec.</span>
+<span class="c"># This is a functional breakdown:</span>
+
+<span class="k">Input:</span> User clicks [Export], Date Range
+<span class="k">State check:</span> Does user have 'Admin' role?
+<span class="k">Logic:</span> Fetch data. Map columns.
+<span class="k">Edge:</span> If >10k rows -> email link instead.
+<span class="k">Edge:</span> If 0 rows -> show toast error.
+<span class="k">Output:</span> File download trigger.
+      </div>
+    </div>
+    <p class="lede reveal" style="margin-top: var(--space-lg);">If you don't define the edges, the AI will guess them.</p>
+  </section>
+
+  <!-- =================== SLIDE 4 · ANATOMY =================== -->
+  <section class="slide" data-slide="4">
+    <div class="eyebrow reveal">03 · Anatomy</div>
+    <h2 class="heading reveal">Four parts of a functional spec.</h2>
+    <div class="anatomy reveal">
+      <div class="anatomy-stack">
+        <div class="anatomy-row"><span class="pill">Actor & State</span><p>Who is doing this, and what is their current context? <span>"A free-tier user with zero existing projects."</span></p></div>
+        <div class="anatomy-row"><span class="pill">Trigger</span>      <p>The exact event that starts the flow. <span>"Clicks the 'Create New' button."</span></p></div>
+        <div class="anatomy-row"><span class="pill">Logic / Rules</span><p>The business constraints that must be checked. <span>"Limit is 3 projects. Check DB count."</span></p></div>
+        <div class="anatomy-row"><span class="pill">Outcome</span>      <p>The resulting state changes and UI updates. <span>"Project created, route to /editor, show success."</span></p></div>
+      </div>
+      <p class="lede">When feeding an AI, structure beats prose. Map the state machine before you ask for the code.</p>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 5 · COMPLETENESS =================== -->
+  <section class="slide" data-slide="5">
+    <div class="eyebrow reveal">Principle 1</div>
+    <h2 class="heading reveal"><em>Completeness:</em> The happy path is only 20%.</h2>
+    <div class="grid-2 reveal">
+      <div class="stack">
+        <p class="body">Most PMs write specs for the "Happy Path"—when everything works perfectly. AI needs you to explicitly define the negative paths.</p>
+        <ul class="dotlist" style="margin-top: 16px;">
+          <li>What happens when the database is empty?</li>
+          <li>What happens if the API times out?</li>
+          <li>What happens if they input text instead of a number?</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="label">The Completeness Checklist</div>
+        <div class="title">The 4 States</div>
+        <p>1. <strong>Blank state</strong> (First time user)</p>
+        <p>2. <strong>Loading state</strong> (Waiting for network)</p>
+        <p>3. <strong>Error state</strong> (Something broke)</p>
+        <p>4. <strong>Ideal state</strong> (The happy path)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 6 · CONSISTENCY =================== -->
+  <section class="slide" data-slide="6">
+    <div class="eyebrow reveal">Principle 2</div>
+    <h2 class="heading reveal"><em>Consistency:</em> Resolving contradictions.</h2>
+    <div class="grid-2 reveal">
+      <div class="card">
+        <div class="label">Contradictory Rules</div>
+        <div class="title">The silent killer</div>
+        <p>Rule A: "Users can delete their own comments."</p>
+        <p>Rule B: "Once a thread is locked, no changes can be made."</p>
+        <p style="margin-top: 10px; color: #b07a52;">AI will arbitrarily pick one. You must specify: <em>"Thread locks supersede user delete rights."</em></p>
+      </div>
+      <div class="stack">
+        <p class="body">AI models read top-to-bottom. If you have conflicting logic scattered across a 4-page document, the AI will write buggy code.</p>
+        <p class="body subtext">Functional analysis forces you to reconcile overlapping rules before generating a single line of React.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 7 · PITFALLS =================== -->
+  <section class="slide" data-slide="7">
+    <div class="eyebrow reveal">04 · Pitfalls</div>
+    <h2 class="heading reveal">Where requirements <em>break</em> the AI.</h2>
+    <div class="grid-2 reveal">
+      <div class="stack-sm">
+        <div class="card">
+          <div class="title" style="font-size: 19px;">"Make it like Stripe"</div>
+          <p>Assuming the AI shares your mental model of a third-party app. Be literal. Describe the exact behavior, not the analogy.</p>
+        </div>
+        <div class="card">
+          <div class="title" style="font-size: 19px;">Implicit Variables</div>
+          <p>"Send a notification." To whom? In app or email? With what copy? Define the exact payload.</p>
+        </div>
+      </div>
+      <div class="stack-sm">
+        <div class="card">
+          <div class="title" style="font-size: 19px;">Mixing "What" and "How"</div>
+          <p>Telling the AI to use a specific `useEffect` loop instead of defining the functional requirement. Define the behavior, let the AI write the syntax.</p>
+        </div>
+        <div class="card">
+          <div class="title" style="font-size: 19px;">The "Etc." cop-out</div>
+          <p>"Show fields for name, email, etc." The AI will literally generate random fields to fill the "etc." Exhaustive lists only.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 8 · EXAMPLE 1 · THE BREAKDOWN =================== -->
+  <section class="slide example" data-slide="8">
+    <div class="eyebrow reveal">Worked example · 01 of 06</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">The <em>Vague</em> vs. The <em>Functional</em>.</h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>Breaking down a feature request.</h3>
+        <p>If you feed the "Vague" request to an AI coder, it will generate a generic UI, forget validation, and hallucinate a database schema.</p>
+        <p>The "Functional" version gives the agent explicit boundaries, ensuring the generated code matches the business logic.</p>
+        <ul class="tags">
+          <li>Deconstruction</li><li>Logic</li><li>Boundaries</li>
+        </ul>
+      </div>
+      <div class="prompt-block bad">
+<span class="tag">Vague Idea</span>
+"We need a promo code feature
+on the checkout page. If they
+enter 'SUMMER', take 10% off."
+
+<span class="c">AI guesses: Does it stack?
+Is it case sensitive? When does
+it expire? What if it's invalid?</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 9 · EXAMPLE 1 (CONT) =================== -->
+  <section class="slide example" data-slide="9">
+    <div class="eyebrow reveal">Worked example · 02 of 06</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">The <em>Functional</em> version.</h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>This is what you feed the AI.</h3>
+        <p>By defining the exact inputs, validation rules, state changes, and negative paths, you leave zero room for the LLM to invent incorrect behavior.</p>
+      </div>
+      <div class="prompt-block good">
+<span class="tag">Functional Spec</span>
+<span class="h">Feature: Apply Promo Code</span>
+<span class="k">Input:</span> Text field, max 20 chars.
+<span class="k">Trigger:</span> Click "Apply" or press Enter.
+
+<span class="h">Validation Logic:</span>
+1. Strip whitespace, uppercase input.
+2. Check DB: Is code active?
+3. Check DB: Is expiration > today?
+4. Rule: Only ONE code per order.
+   (Replace existing if applied again).
+
+<span class="h">Outcomes (Success):</span>
+- Calculate 10% off `cart_total`.
+- Update `discount_amount` state.
+- Show green text: "Code applied!"
+
+<span class="h">Outcomes (Negative):</span>
+- If invalid/expired: Show red text
+  "Invalid code". Do not change total.
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 10 · EXAMPLE 2 · BDD FORMAT =================== -->
+  <section class="slide example" data-slide="10">
+    <div class="eyebrow reveal">Worked example · 03 of 06</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">Formatting for AI: <em>Given / When / Then</em>.</h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>The language of logic.</h3>
+        <p>Behavior-Driven Development (BDD) formatting is a superpower when prompting AI. LLMs are trained heavily on this format.</p>
+        <p>It forces you to declare the initial state (Given), the trigger (When), and the exact expected result (Then).</p>
+        <ul class="tags">
+          <li>BDD</li><li>Gherkin</li><li>State mapping</li>
+        </ul>
+      </div>
+      <div class="prompt-block good">
+<span class="tag">BDD Spec</span>
+<span class="h">Scenario: Downgrading a subscription</span>
+
+<span class="k">GIVEN</span> the user is on the 'Pro' plan
+  <span class="k">AND</span> their current billing cycle
+      ends on day X
+  <span class="k">AND</span> they have 5 active projects
+
+<span class="k">WHEN</span> they click "Downgrade to Free"
+
+<span class="k">THEN</span> schedule plan change for day X
+  <span class="k">AND</span> show banner "Plan ends on X"
+  <span class="k">AND</span> do NOT lock projects immediately
+  <span class="k">AND</span> send webhook to billing system
+
+<span class="c"># The AI translates this directly into</span>
+<span class="c"># if/else statements and API calls.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 11 · EXAMPLE 3 · STATE MACHINES =================== -->
+  <section class="slide example" data-slide="11">
+    <div class="eyebrow reveal">Worked example · 04 of 06</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">Mapping the <em>State Transitions</em>.</h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>Preventing impossible actions.</h3>
+        <p>If an invoice is "Paid", a user shouldn't be able to click "Edit". If you don't explicitly list allowed transitions, the AI might leave the Edit button active.</p>
+        <p>Provide a simple transition map in your prompt.</p>
+        <ul class="tags">
+          <li>State Machine</li><li>Enums</li><li>Transitions</li>
+        </ul>
+      </div>
+      <div class="prompt-block good">
+<span class="tag">State Map Prompt</span>
+<span class="h">Entity: Invoice</span>
+Status enum: [Draft, Sent, Paid, Void]
+
+<span class="h">Allowed Transitions:</span>
+- Draft -> Sent
+- Draft -> Void
+- Sent -> Paid
+- Sent -> Void
+
+<span class="h">Rules for UI generation:</span>
+If status == Paid:
+  - Disable 'Edit' and 'Send' buttons.
+  - Show 'Download Receipt' button.
+
+<span class="c"># Giving this to an AI ensures the React</span>
+<span class="c"># component maps exactly to reality.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 12 · SKILLS BRIDGE =================== -->
+  <section class="slide" data-slide="12">
+    <div class="eyebrow reveal">04 · Tools for Analysis</div>
+    <h2 class="heading reveal">Using <em>Agent Skills</em> for Analysis.</h2>
+    <div class="grid-2 reveal">
+      <div class="stack">
+        <p class="body">Writing a perfect functional spec from scratch is hard. You will naturally miss edge cases and contradictory rules.</p>
+        <p class="body subtext">Instead of struggling alone, you can use specialized Agent Skills (like the ones we covered in Part 3) to help you <em>discover</em> and <em>stress-test</em> your requirements before you ever ask an agent to write code.</p>
+      </div>
+      <div class="card">
+        <div class="label">Step 1: Discovery</div>
+        <div class="title">The Brainstorm Skill</div>
+        <p>Use it to diverge. Force the AI to find edge cases, weird states, and negative paths you haven't considered.</p>
+        <div class="label" style="margin-top: 20px;">Step 2: Validation</div>
+        <div class="title">The Grill Me Skill</div>
+        <p>Use it to converge. Force the AI to attack your written logic and find the contradictions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 13 · EXAMPLE 4 · BRAINSTORM SKILL =================== -->
+  <section class="slide example" data-slide="13">
+    <div class="eyebrow reveal">Worked example · 05 of 06</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">Using the <em>Brainstorm</em> skill.</h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>Finding the missing states.</h3>
+        <p>When you have a rough idea, trigger the Brainstorm skill. Because it's designed to be a divergent facilitator, it won't just say "great idea."</p>
+        <p>It will actively help you map out the negative paths you need for your functional spec.</p>
+        <ul class="tags">
+          <li>Discovery</li><li>Edge Cases</li><li>Brainstorm Skill</li>
+        </ul>
+      </div>
+      <div class="prompt-block good">
+<span class="tag">workflow</span>
+<span class="h">You:</span>
+"@brainstorm-partner I want to build
+a 'transfer project ownership' feature.
+Help me map the edge cases."
+
+<span class="h">Brainstorm Agent:</span>
+"Let's look at the edges:
+1. What if the recipient doesn't have
+   a paid account?
+2. What if the recipient rejects the
+   transfer? Where does the project go?
+3. What happens to the original owner's
+   billing during the pending state?
+
+Which of these 3 paths should we map
+out first?"
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 14 · EXAMPLE 5 · GRILL ME SKILL =================== -->
+  <section class="slide example" data-slide="14">
+    <div class="eyebrow reveal">Worked example · 06 of 06</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">Using the <em>Grill Me</em> skill.</h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>Stress-testing the logic.</h3>
+        <p>Once you've written your functional spec (your Given/When/Thens), do not immediately hand it to a coding agent.</p>
+        <p>Feed it to the "Grill Me" skill first. It acts as an adversarial QA engineer, reading your logic strictly to find contradictions.</p>
+        <ul class="tags">
+          <li>Validation</li><li>QA Review</li><li>Grill Me Skill</li>
+        </ul>
+      </div>
+      <div class="prompt-block good">
+<span class="tag">workflow</span>
+<span class="h">You:</span>
+"@grill-me-stakeholder Review this
+checkout spec for logical holes."
+
+<span class="h">Grill Me Agent:</span>
+"This spec is broken in two places:
+1. You stated 'Promo codes apply to
+the total', but later said 'Shipping
+is calculated post-discount.' If shipping
+is free over $50, does the promo code
+drop them below the free shipping tier?
+
+2. Your State Machine allows 'Draft -> Paid'.
+You bypassed the 'Sent' state entirely.
+How can a user pay an invoice they
+haven't received?"
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 15 · TAKEAWAYS =================== -->
+  <section class="slide" data-slide="15">
+    <div class="eyebrow reveal">In closing</div>
+    <h2 class="heading reveal">Four things to <em>remember.</em></h2>
+    <div class="takeaways reveal">
+      <div class="num">01</div><div class="t">AI amplifies vagueness. The bottleneck is now exact requirement definition.</div>
+      <div class="num">02</div><div class="t">Use BDD (Given/When/Then) to structure logic clearly for the agent.</div>
+      <div class="num">03</div><div class="t">Use the <em>Brainstorm</em> skill to discover the negative paths and edge cases.</div>
+      <div class="num">04</div><div class="t">Use the <em>Grill Me</em> skill to aggressively QA your logic before generating code.</div>
+    </div>
+    <p class="lede reveal" style="margin-top: var(--space-2xl);">Rigorous thinking. Flawless execution.</p>
+  </section>
+
+  <!-- nav: arrows + dots -->
+  <div class="nav" role="navigation" aria-label="slide controls">
+    <button id="prev" aria-label="Previous slide">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <button id="next" aria-label="Next slide">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="tapzone left" id="tap-left"  aria-hidden="true"></div>
+  <div class="tapzone right" id="tap-right" aria-hidden="true"></div>
+
+  <div class="hint" id="hint">Swipe or tap to navigate · arrow keys also work</div>
+
+</div>
+
+<script>
+(function () {
+  const slides   = Array.from(document.querySelectorAll('.slide'));
+  const total    = slides.length;
+  const counter  = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  const prevBtn  = document.getElementById('prev');
+  const nextBtn  = document.getElementById('next');
+  const dotsWrap = document.getElementById('dots');
+  const tapL     = document.getElementById('tap-left');
+  const tapR     = document.getElementById('tap-right');
+  const deck     = document.getElementById('deck');
+
+  let i = 0;
+  let lock = false;
+  const LOCK_MS = 420;
+
+  slides.forEach((_, idx) => {
+    const d = document.createElement('span');
+    d.className = 'dot';
+    d.dataset.index = idx;
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function render() {
+    slides.forEach((s, idx) => s.classList.toggle('is-active', idx === i));
+    dots.forEach((d, idx) => d.classList.toggle('is-active', idx === i));
+    counter.textContent = pad(i + 1) + ' / ' + pad(total);
+    progress.style.width = (((i + 1) / total) * 100) + '%';
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === total - 1;
+  }
+
+  function go(delta) {
+    if (lock) return;
+    const next = Math.max(0, Math.min(total - 1, i + delta));
+    if (next === i) return;
+    i = next;
+    lock = true;
+    render();
+    setTimeout(() => { lock = false; }, LOCK_MS);
+  }
+  function goTo(idx) {
+    if (lock || idx === i) return;
+    i = Math.max(0, Math.min(total - 1, idx));
+    lock = true;
+    render();
+    setTimeout(() => { lock = false; }, LOCK_MS);
+  }
+
+  prevBtn.addEventListener('click', () => go(-1));
+  nextBtn.addEventListener('click', () => go(1));
+  dots.forEach(d => d.addEventListener('click', () => goTo(parseInt(d.dataset.index, 10))));
+
+  tapL.addEventListener('click', () => go(-1));
+  tapR.addEventListener('click', () => go(1));
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault(); go(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'Backspace') {
+      e.preventDefault(); go(-1);
+    } else if (e.key === 'Home') {
+      goTo(0);
+    } else if (e.key === 'End') {
+      goTo(total - 1);
+    }
+  });
+
+  let touchStartX = 0, touchStartY = 0, touchStartT = 0, swiping = false;
+  const THRESH_X = 50;
+  const THRESH_T = 600;
+  const MAX_Y    = 80;
+
+  deck.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+    touchStartT = Date.now();
+    swiping = true;
+  }, { passive: true });
+
+  deck.addEventListener('touchend', (e) => {
+    if (!swiping) return;
+    swiping = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    const dt = Date.now() - touchStartT;
+    if (dt > THRESH_T) return;
+    if (Math.abs(dy) > MAX_Y) return;
+    if (Math.abs(dx) < THRESH_X) return;
+    go(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  let pStartX = null;
+  deck.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (e.pointerType === 'touch') return;
+    pStartX = e.clientX;
+  });
+  deck.addEventListener('pointerup', (e) => {
+    if (pStartX == null) return;
+    const dx = e.clientX - pStartX;
+    pStartX = null;
+    if (Math.abs(dx) >= 80) go(dx < 0 ? 1 : -1);
+  });
+
+  function readHash() {
+    const m = (location.hash || '').match(/^#(\d+)$/);
+    if (m) {
+      const idx = Math.max(0, Math.min(total - 1, parseInt(m[1], 10) - 1));
+      i = idx;
+    }
+  }
+  readHash();
+  window.addEventListener('hashchange', () => { readHash(); render(); });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
+
+
+```

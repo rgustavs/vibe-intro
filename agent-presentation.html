@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents — Cambio PMO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f172a;
+    --paper: #fafaf7;
+    --paper-deep: #f1f0ea;
+    --accent: #2563eb;
+    --accent-deep: #1d4ed8;
+    --steel: #475569;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --highlight: #f59e0b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--ink);
+    font-family: 'Inter Tight', sans-serif;
+    color: var(--ink);
+  }
+
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    background: var(--paper);
+    padding: 56px 80px;
+    display: none;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .slide.active {
+    display: flex;
+    opacity: 1;
+  }
+
+  .strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .strip .left { display: flex; gap: 24px; align-items: center; }
+  .strip .crest { width: 10px; height: 10px; background: var(--accent); border-radius: 2px; }
+
+  .footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .page-num {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  .content {
+    flex: 1;
+    display: flex;
+    padding: 40px 0;
+  }
+
+  h1.display {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 104px;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+  }
+  h1.display em { font-style: italic; font-weight: 400; color: var(--accent); }
+
+  h2.title {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 58px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+  }
+  h2.title em { font-style: italic; color: var(--accent); }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--accent); }
+
+  p.body {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--steel);
+    max-width: 560px;
+  }
+
+  .lede {
+    font-family: 'Fraunces', serif;
+    font-size: 26px;
+    line-height: 1.4;
+    font-weight: 300;
+    color: var(--ink);
+    max-width: 640px;
+    margin-top: 24px;
+  }
+  .lede em { font-style: italic; color: var(--accent-deep); }
+
+  #slide-1 .content { flex-direction: column; justify-content: space-between; }
+
+  .cover-meta {
+    display: flex;
+    gap: 64px;
+    margin-top: 48px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .cover-meta div { display: flex; flex-direction: column; gap: 6px; }
+  .cover-meta .label { color: var(--muted); }
+  .cover-meta .value { color: var(--ink); font-size: 13px; }
+
+  #slide-2 .content { gap: 64px; align-items: center; }
+  .col-left { flex: 1; }
+  .col-right { flex: 1; display: flex; align-items: center; justify-content: center; }
+
+  .agent-diagram { width: 100%; max-width: 480px; }
+
+  #slide-3 .content { gap: 64px; align-items: center; }
+
+  .llm-card {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 36px;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 440px;
+  }
+  .llm-card .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--highlight);
+    margin-bottom: 16px;
+  }
+  .llm-card .big {
+    font-family: 'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 24px;
+  }
+  .llm-card .big em { font-style: italic; color: var(--highlight); }
+  .llm-card .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-top: 1px solid rgba(250, 250, 247, 0.15);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+  .llm-card .row .k { color: rgba(250, 250, 247, 0.5); text-transform: uppercase; }
+  .llm-card .row .v { color: var(--paper); }
+
+  #slide-4 .content { flex-direction: column; gap: 28px; }
+  .token-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .token-card {
+    background: var(--paper-deep);
+    border-left: 3px solid var(--accent);
+    padding: 22px 24px;
+  }
+  .token-card .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .token-card .card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .token-card .card-body {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--steel);
+  }
+
+  .token-demo {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 22px 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .tok {
+    display: inline-block;
+    padding: 4px 10px;
+    margin: 0 2px;
+    border-radius: 3px;
+    border: 1px solid rgba(250, 250, 247, 0.25);
+  }
+  .tok.a { color: #60a5fa; border-color: rgba(96,165,250,0.4); background: rgba(96,165,250,0.1); }
+  .tok.b { color: #fbbf24; border-color: rgba(251,191,36,0.4); background: rgba(251,191,36,0.1); }
+  .tok.c { color: #a3a3a3; border-color: rgba(163,163,163,0.4); background: rgba(163,163,163,0.1); }
+
+  #slide-5 .content { gap: 64px; }
+
+  .comp-list { display: flex; flex-direction: column; }
+  .comp-item {
+    display: grid;
+    grid-template-columns: 60px 180px 1fr;
+    gap: 24px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .comp-item:last-child { border-bottom: 1px solid var(--line); }
+  .comp-item .idx {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+  .comp-item .name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .comp-item .desc {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--steel);
+  }
+
+  #slide-7 .content { gap: 64px; align-items: stretch; }
+
+  .takeaway-list { display: flex; flex-direction: column; gap: 24px; margin-top: 12px; }
+  .takeaway { display: flex; gap: 20px; align-items: flex-start; }
+  .takeaway .marker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    min-width: 32px;
+    padding-top: 4px;
+  }
+  .takeaway .text {
+    font-family: 'Fraunces', serif;
+    font-size: 21px;
+    line-height: 1.45;
+    color: var(--ink);
+    flex: 1;
+  }
+  .takeaway .text strong { color: var(--accent-deep); font-weight: 600; }
+
+  .nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 18px;
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    z-index: 200;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+  .nav button {
+    background: transparent;
+    border: none;
+    color: var(--paper);
+    cursor: pointer;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .nav button:hover { background: rgba(250,250,247,0.15); }
+  .nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav .counter { min-width: 50px; text-align: center; color: var(--highlight); }
+  .nav .dots { display: flex; gap: 6px; }
+  .nav .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(250,250,247,0.25);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav .dot.active { background: var(--highlight); transform: scale(1.3); }
+
+  .definition-box {
+    background: var(--paper-deep);
+    padding: 32px;
+    border-radius: 4px;
+    margin-top: 32px;
+    border-left: 3px solid var(--accent);
+  }
+  .definition-box .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .definition-box .def {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    line-height: 1.4;
+    font-style: italic;
+    color: var(--ink);
+  }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- =================== SLIDE 1: COVER =================== -->
+  <section class="slide active" id="slide-1">
+    <div class="strip">
+      <div class="left"><div class="crest"></div><span>Cambio PMO · Internal Brief</span></div>
+      <span>2026 · Entry Level</span>
+    </div>
+
+    <div class="content">
+      <div style="margin-top: 40px;">
+        <div class="eyebrow">A Primer · Vol. 01</div>
+        <h1 class="display">Understanding<br><em>AI Agents</em></h1>
+        <p class="lede" style="margin-top: 40px;">
+          A short, plain-English tour of what an AI agent is,
+          what it's made of, and how it actually works.
+        </p>
+
+        <div class="cover-meta">
+          <div><span class="label">Audience</span><span class="value">Cambio PMO</span></div>
+          <div><span class="label">Format</span><span class="value">Entry-Level Briefing</span></div>
+          <div><span class="label">Duration</span><span class="value">~ 15 Minutes</span></div>
+          <div><span class="label">Filed Under</span><span class="value">Foundations</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>§ 01 — Cover</span>
+      <span class="page-num">i</span>
+      <span>Understanding AI Agents</span>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 2: WHAT IS AN AGENT =================== -->
+  <section class="slide" id="slide-2">
+    <div class="strip">
+      <div class="left"><div class="crest"></div><span>Cambio PMO · Internal Brief</span></div>
+      <span>Chapter One</span>
+    </div>
+
+    <div class="content">
+      <div class="col-left">
+        <div class="eyebrow">Chapter One · The Definition</div>
+        <h2 class="title">What is an <em>agent</em>?</h2>
+        <p class="body" style="margin-top: 24px;">
+          An AI agent is a software system that takes a goal, decides on its own
+          how to approach it, and uses tools to take real actions until the
+          job is done — or until it needs to ask for help.
+        </p>
+        <p class="body" style="margin-top: 16px;">
+          Unlike a chatbot, which answers in one shot, an agent works in steps.
+          It can search, read, write, call APIs, and check its own work along the way.
+        </p>
+
+        <div class="definition-box">
+          <div class="label">In one sentence</div>
+          <div class="def">An agent = a language model + instructions + tools + a loop that lets it act.</div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <svg class="agent-diagram" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowA" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 z" fill="#2563eb"/>
+            </marker>
+          </defs>
+
+          <rect x="40" y="40" width="400" height="400" fill="none" stroke="#e2e8f0" stroke-width="1" rx="4"/>
+          <text x="56" y="68" style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; fill:#64748b;">FIG. 01 — STRUCTURE</text>
+
+          <circle cx="240" cy="240" r="80" fill="#0f172a"/>
+          <text x="240" y="232" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.25em; fill:#f59e0b;">CORE</text>
+          <text x="240" y="258" text-anchor="middle" style="font-family:'Fraunces',serif; font-style:italic; font-size:24px; fill:#fafaf7;">Agent</text>
+
+          <rect x="195" y="100" width="90" height="50" fill="#fafaf7" stroke="#0f172a" stroke-width="1.2" rx="4"/>
+          <text x="240" y="122" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.2em; fill:#64748b;">INPUT</text>
+          <text x="240" y="140" text-anchor="middle" style="font-family:'Fraunces',serif; font-size:15px; fill:#0f172a;">Goal</text>
+
+          <rect x="340" y="215" width="90" height="50" fill="#fafaf7" stroke="#0f172a" stroke-width="1.2" rx="4"/>
+          <text x="385" y="237" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.2em; fill:#64748b;">USES</text>
+          <text x="385" y="255" text-anchor="middle" style="font-family:'Fraunces',serif; font-size:15px; fill:#0f172a;">Tools</text>
+
+          <rect x="195" y="330" width="90" height="50" fill="#fafaf7" stroke="#0f172a" stroke-width="1.2" rx="4"/>
+          <text x="240" y="352" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.2em; fill:#64748b;">OUTPUT</text>
+          <text x="240" y="370" text-anchor="middle" style="font-family:'Fraunces',serif; font-size:15px; fill:#0f172a;">Result</text>
+
+          <rect x="50" y="215" width="90" height="50" fill="#fafaf7" stroke="#0f172a" stroke-width="1.2" rx="4"/>
+          <text x="95" y="237" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.2em; fill:#64748b;">READS</text>
+          <text x="95" y="255" text-anchor="middle" style="font-family:'Fraunces',serif; font-size:15px; fill:#0f172a;">Context</text>
+
+          <path d="M 240 150 L 240 158" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowA)"/>
+          <path d="M 145 240 L 158 240" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowA)"/>
+          <path d="M 322 240 L 335 240" stroke="#2563eb" stroke-width="1.5" marker-start="url(#arrowA)"/>
+          <path d="M 240 322 L 240 328" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowA)"/>
+
+          <text x="56" y="425" style="font-family:'JetBrains Mono',monospace; font-size:9px; fill:#64748b; letter-spacing:0.15em;">CONCEPTUAL OVERVIEW</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>§ 02 — Definition</span>
+      <span class="page-num">01</span>
+      <span>Cambio PMO Foundations</span>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 3: LLM =================== -->
+  <section class="slide" id="slide-3">
+    <div class="strip">
+      <div class="left"><div class="crest"></div><span>Cambio PMO · Internal Brief</span></div>
+      <span>Chapter Two</span>
+    </div>
+
+    <div class="content">
+      <div class="col-left">
+        <div class="eyebrow">Chapter Two · The Brain</div>
+        <h2 class="title">The <em>LLM</em> at the center.</h2>
+        <p class="lede">
+          A Large Language Model is the reasoning component that powers every agent.
+          It reads text and writes text — fluently and at scale.
+        </p>
+        <p class="body" style="margin-top: 24px;">
+          The LLM is what makes the agent feel intelligent: it can plan,
+          summarize, decide which tool to use, and decide when it's done.
+          But on its own, it can't do anything outside the conversation.
+        </p>
+        <p class="body" style="margin-top: 16px;">
+          It doesn't know today's date, it can't read your email, and it
+          forgets each conversation when it ends. Everything beyond reading
+          and writing text has to be wired up around it — that's the rest
+          of the agent.
+        </p>
+      </div>
+
+      <div class="col-right">
+        <div class="llm-card">
+          <div class="tag">LARGE LANGUAGE MODEL</div>
+          <div class="big">Reads text.<br>Writes <em>text.</em></div>
+
+          <div class="row"><span class="k">Can do</span><span class="v">Reason, plan, summarize</span></div>
+          <div class="row"><span class="k">Can do</span><span class="v">Choose actions</span></div>
+          <div class="row"><span class="k">Can do</span><span class="v">Generate code &amp; text</span></div>
+          <div class="row"><span class="k">Cannot</span><span class="v">Access live data alone</span></div>
+          <div class="row"><span class="k">Cannot</span><span class="v">Remember past sessions</span></div>
+          <div class="row"><span class="k">Cannot</span><span class="v">Act in the world unaided</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>§ 03 — The LLM</span>
+      <span class="page-num">02</span>
+      <span>Cambio PMO Foundations</span>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 4: TOKENS =================== -->
+  <section class="slide" id="slide-4">
+    <div class="strip">
+      <div class="left"><div class="crest"></div><span>Cambio PMO · Internal Brief</span></div>
+      <span>Chapter Three</span>
+    </div>
+
+    <div class="content">
+      <div style="display:flex; gap:60px; align-items:flex-start;">
+        <div style="flex: 1;">
+          <div class="eyebrow">Chapter Three · Tokens</div>
+          <h2 class="title">Everything is <em>tokens</em>.</h2>
+        </div>
+        <div style="flex: 1; padding-top: 36px;">
+          <p class="body" style="font-size: 19px;">
+            Before the model sees your text, it's broken into <em>tokens</em> —
+            small chunks of characters. The model reads tokens, thinks in tokens,
+            and produces tokens.
+          </p>
+          <p class="body" style="margin-top: 14px; font-size: 14px;">
+            Rough rule: <strong>1 token ≈ 4 characters ≈ ¾ of an English word.</strong>
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; color:var(--muted); margin-bottom: 10px; text-transform:uppercase;">Example sentence, tokenized</div>
+        <div class="token-demo">
+          <span class="tok a">The</span><span class="tok b"> agent</span><span class="tok c"> booked</span><span class="tok a"> a</span><span class="tok b"> meeting</span><span class="tok c"> on</span><span class="tok a"> Tuesday</span><span class="tok b">.</span>
+          <span style="margin-left: 16px; color: #94a3b8; font-size: 12px;">→ 8 tokens</span>
+        </div>
+      </div>
+
+      <div class="token-grid">
+        <div class="token-card">
+          <div class="num">01 — CONTEXT WINDOW</div>
+          <div class="card-title">A finite working memory.</div>
+          <div class="card-body">
+            The model can only hold so many tokens at once — instructions,
+            conversation, and any documents you give it all share the same space.
+            Once it's full, older content falls out.
+          </div>
+        </div>
+        <div class="token-card">
+          <div class="num">02 — COST &amp; SPEED</div>
+          <div class="card-title">You pay per token.</div>
+          <div class="card-body">
+            Every token in and every token out has a price and a time cost.
+            Longer prompts and longer responses mean more money and more latency.
+            Concise wins.
+          </div>
+        </div>
+        <div class="token-card">
+          <div class="num">03 — DESIGN IMPACT</div>
+          <div class="card-title">It shapes everything.</div>
+          <div class="card-body">
+            Deciding what goes into the context window — and what doesn't —
+            is one of the central design questions in building any agent.
+            "Just paste everything" has a real price.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>§ 04 — Tokens</span>
+      <span class="page-num">03</span>
+      <span>Cambio PMO Foundations</span>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 5: COMPONENTS =================== -->
+  <section class="slide" id="slide-5">
+    <div class="strip">
+      <div class="left"><div class="crest"></div><span>Cambio PMO · Internal Brief</span></div>
+      <span>Chapter Four</span>
+    </div>
+
+    <div class="content">
+      <div class="col-left" style="flex: 1;">
+        <div class="eyebrow">Chapter Four · The Components</div>
+        <h2 class="title">What's <em>around</em> the model.</h2>
+        <p class="lede">
+          The LLM is one piece. The rest of the agent is the scaffolding
+          that turns a smart text-generator into something that gets work done.
+        </p>
+        <p class="body" style="margin-top: 24px;">
+          When teams talk about "building an agent," most of the work
+          lives here — in the components around the model, not the model itself.
+        </p>
+      </div>
+
+      <div class="col-right" style="flex: 1.2; align-items: flex-start; padding-top: 8px;">
+        <div style="width: 100%;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.25em; color:var(--muted); margin-bottom: 12px; text-transform:uppercase;">Five Building Blocks</div>
+          <div class="comp-list">
+            <div class="comp-item">
+              <span class="idx">01 / 05</span>
+              <span class="name">System prompt</span>
+              <span class="desc">The standing instructions. Tells the model who it is, what it's for, and how it should behave across every interaction.</span>
+            </div>
+            <div class="comp-item">
+              <span class="idx">02 / 05</span>
+              <span class="name">Tools</span>
+              <span class="desc">The actions the agent can take: search the web, query a database, send an email, run code, call an API.</span>
+            </div>
+            <div class="comp-item">
+              <span class="idx">03 / 05</span>
+              <span class="name">Memory</span>
+              <span class="desc">Notes and context from past sessions that get loaded back in when relevant, so the agent isn't starting from scratch every time.</span>
+            </div>
+            <div class="comp-item">
+              <span class="idx">04 / 05</span>
+              <span class="name">Orchestration</span>
+              <span class="desc">The control logic. Decides when to call the model again, when to use a tool, when to stop, and when to escalate to a human.</span>
+            </div>
+            <div class="comp-item">
+              <span class="idx">05 / 05</span>
+              <span class="name">Guardrails</span>
+              <span class="desc">Permissions, filters, and human checkpoints that keep the agent inside the lines of what it's allowed to do.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>§ 05 — Components</span>
+      <span class="page-num">04</span>
+      <span>Cambio PMO Foundations</span>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 6: THE LOOP =================== -->
+  <section class="slide" id="slide-6">
+    <div class="strip">
+      <div class="left"><div class="crest"></div><span>Cambio PMO · Internal Brief</span></div>
+      <span>Chapter Five</span>
+    </div>
+
+    <div class="content">
+      <div style="display:flex; gap:60px; align-items:center; width:100%;">
+        <div style="flex: 1;">
+          <div class="eyebrow">Chapter Five · The Agent Loop</div>
+          <h2 class="title">How it actually <em>runs</em>.</h2>
+          <p class="lede">
+            An agent doesn't answer in a single response. It works in a loop:
+            think, act, observe, and repeat — until the job is done.
+          </p>
+          <p class="body" style="margin-top: 24px;">
+            Each iteration uses tokens and carries forward what it learned from the last.
+            This is what makes an agent <em>autonomous</em>: within the limits of its
+            instructions and tools, it decides what to do next.
+          </p>
+          <p class="body" style="margin-top: 16px;">
+            A good agent knows when to stop. A bad one loops forever.
+          </p>
+        </div>
+
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+          <svg viewBox="0 0 480 440" xmlns="http://www.w3.org/2000/svg" style="width: 100%; max-width: 480px;">
+            <defs>
+              <marker id="arrowLoop" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+              </marker>
+            </defs>
+
+            <rect x="30" y="30" width="420" height="380" fill="none" stroke="#e2e8f0" stroke-width="1" rx="4"/>
+            <text x="46" y="58" style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; fill:#64748b;">FIG. 02 — THE AGENT LOOP</text>
+
+            <circle cx="240" cy="130" r="54" fill="#fafaf7" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="240" y="124" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.25em; fill:#64748b;">STEP 01</text>
+            <text x="240" y="145" text-anchor="middle" style="font-family:'Fraunces',serif; font-style:italic; font-size:22px; fill:#0f172a;">Think</text>
+
+            <circle cx="130" cy="300" r="54" fill="#fafaf7" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="130" y="294" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.25em; fill:#64748b;">STEP 02</text>
+            <text x="130" y="315" text-anchor="middle" style="font-family:'Fraunces',serif; font-style:italic; font-size:22px; fill:#0f172a;">Act</text>
+
+            <circle cx="350" cy="300" r="54" fill="#fafaf7" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="350" y="294" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.25em; fill:#64748b;">STEP 03</text>
+            <text x="350" y="315" text-anchor="middle" style="font-family:'Fraunces',serif; font-style:italic; font-size:22px; fill:#0f172a;">Observe</text>
+
+            <path d="M 207 174 Q 145 220 152 254" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowLoop)"/>
+            <path d="M 184 305 Q 240 335 296 305" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowLoop)"/>
+            <path d="M 328 256 Q 335 220 273 174" fill="none" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrowLoop)"/>
+
+            <text x="148" y="218" style="font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:0.15em; fill:#1d4ed8;">PICK A TOOL</text>
+            <text x="195" y="358" style="font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:0.15em; fill:#1d4ed8;">READ THE RESULT</text>
+            <text x="298" y="218" style="font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:0.15em; fill:#1d4ed8;">DECIDE NEXT</text>
+
+            <text x="240" y="235" text-anchor="middle" style="font-family:'Fraunces',serif; font-style:italic; font-size:14px; fill:#64748b;">repeat until done</text>
+
+            <text x="240" y="395" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em; fill:#0f172a;">→ FINAL ANSWER</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>§ 06 — The Loop</span>
+      <span class="page-num">05</span>
+      <span>Cambio PMO Foundations</span>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 7: TAKEAWAYS =================== -->
+  <section class="slide" id="slide-7">
+    <div class="strip">
+      <div class="left"><div class="crest"></div><span>Cambio PMO · Internal Brief</span></div>
+      <span>Closing</span>
+    </div>
+
+    <div class="content">
+      <div style="flex: 1;">
+        <div class="eyebrow">Closing · What to Remember</div>
+        <h2 class="title">Five things to <em>carry</em> with you.</h2>
+        <p class="lede" style="margin-top: 20px;">
+          The shortest possible version of everything we just covered.
+          Use these to talk about agents with confidence.
+        </p>
+
+        <div class="definition-box" style="margin-top: 40px;">
+          <div class="label">The one-liner</div>
+          <div class="def">
+            "An agent is an LLM plus tools, instructions, and a loop —
+            running until it has done the job."
+          </div>
+        </div>
+      </div>
+
+      <div style="flex: 1;">
+        <div class="takeaway-list">
+          <div class="takeaway">
+            <span class="marker">01</span>
+            <span class="text">An <strong>agent</strong> is more than a model — it's a system that can take actions.</span>
+          </div>
+          <div class="takeaway">
+            <span class="marker">02</span>
+            <span class="text">The <strong>LLM</strong> is the reasoning engine. It reads and writes text, nothing more on its own.</span>
+          </div>
+          <div class="takeaway">
+            <span class="marker">03</span>
+            <span class="text"><strong>Tokens</strong> are the unit of work — finite, metered, and they drive cost, speed, and design.</span>
+          </div>
+          <div class="takeaway">
+            <span class="marker">04</span>
+            <span class="text">Most of the work lives in the <strong>scaffolding</strong>: prompt, tools, memory, orchestration, guardrails.</span>
+          </div>
+          <div class="takeaway">
+            <span class="marker">05</span>
+            <span class="text">Agents work in a <strong>loop</strong>: think, act, observe, repeat — not a single response.</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; font-family:'JetBrains Mono',monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);">
+          <span>End of Briefing</span>
+          <span style="color: var(--accent);">— Questions Welcome —</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>§ 07 — Takeaways</span>
+      <span class="page-num">06</span>
+      <span>Cambio PMO Foundations</span>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev">← Prev</button>
+  <span class="counter"><span id="curr">1</span> / <span id="total">7</span></span>
+  <div class="dots" id="dots"></div>
+  <button id="next">Next →</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const dotsEl = document.getElementById('dots');
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => go(i));
+    dotsEl.appendChild(d);
+  }
+  document.getElementById('total').textContent = total;
+
+  function go(i) {
+    if (i < 0 || i >= total) return;
+    slides[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    document.getElementById('curr').textContent = current + 1;
+    document.querySelectorAll('.dot').forEach((d, idx) => {
+      d.classList.toggle('active', idx === current);
+    });
+    document.getElementById('prev').disabled = current === 0;
+    document.getElementById('next').disabled = current === total - 1;
+  }
+
+  document.getElementById('prev').addEventListener('click', () => go(current - 1));
+  document.getElementById('next').addEventListener('click', () => go(current + 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(current + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(current - 1); }
+    if (e.key === 'Home') go(0);
+    if (e.key === 'End') go(total - 1);
+  });
+  document.getElementById('prev').disabled = true;
+</script>
+
+</body>
+</html>

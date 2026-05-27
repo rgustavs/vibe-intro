@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<title>Agentic AI for PMs · A working introduction</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ---------- design tokens (from design.md) ---------- */
+:root {
+  --color-background: #F7F4EE;
+  --color-surface: #FFFFFF;
+  --color-panel: #F2F2EF;
+  --color-text: #22201D;
+  --color-subtext: #5A5F5B;
+  --color-border: #E3E6E1;
+  --color-accent-pine: #6F7F6A;
+  --color-accent-fjord: #8FA9B8;
+  --color-mist: #A8BDB6;
+  --color-clay: #C9BAA6;
+  --color-sand: #E6E2D8;
+  --color-ink: #22201D;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-code: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'ss01', 'cv11';
+}
+
+/* ---------- structural ---------- */
+.deck {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.progress {
+  position: absolute;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--color-accent-pine);
+  width: 0;
+  transition: width 380ms cubic-bezier(.4,0,.2,1);
+  z-index: 10;
+  opacity: .85;
+}
+
+.brandmark {
+  position: absolute;
+  top: var(--space-lg);
+  left: var(--space-xl);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-subtext);
+  z-index: 5;
+}
+.brandmark svg { display: block; }
+
+.counter {
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-xl);
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--color-subtext);
+  z-index: 5;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- slides ---------- */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(48px, 7vw, 96px) clamp(28px, 7vw, 96px);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 420ms cubic-bezier(.4,0,.2,1), transform 420ms cubic-bezier(.4,0,.2,1), visibility 0s linear 420ms;
+}
+.slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition: opacity 520ms cubic-bezier(.4,0,.2,1), transform 520ms cubic-bezier(.4,0,.2,1), visibility 0s;
+}
+.slide.is-active .reveal {
+  animation: rise 700ms cubic-bezier(.2,.7,.2,1) both;
+}
+.slide.is-active .reveal:nth-child(1) { animation-delay: 60ms; }
+.slide.is-active .reveal:nth-child(2) { animation-delay: 160ms; }
+.slide.is-active .reveal:nth-child(3) { animation-delay: 260ms; }
+.slide.is-active .reveal:nth-child(4) { animation-delay: 360ms; }
+.slide.is-active .reveal:nth-child(5) { animation-delay: 460ms; }
+.slide.is-active .reveal:nth-child(6) { animation-delay: 540ms; }
+.slide.is-active .reveal:nth-child(7) { animation-delay: 620ms; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- typography ---------- */
+.eyebrow {
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent-pine);
+  margin-bottom: var(--space-md);
+}
+h1.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(40px, 7.5vw, 80px);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+}
+h1.display em {
+  font-style: italic;
+  color: var(--color-accent-pine);
+  font-weight: 300;
+}
+h2.heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(28px, 4.6vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+  margin-bottom: var(--space-lg);
+}
+h2.heading em {
+  font-style: italic;
+  color: var(--color-accent-pine);
+  font-weight: 300;
+}
+.lede {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(20px, 2.4vw, 28px);
+  line-height: 1.4;
+  color: var(--color-subtext);
+  max-width: 62ch;
+}
+.body {
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.6;
+  color: var(--color-text);
+  max-width: 62ch;
+}
+.subtext { color: var(--color-subtext); }
+
+/* ---------- composition ---------- */
+.stack > * + * { margin-top: var(--space-lg); }
+.stack-sm > * + * { margin-top: var(--space-sm); }
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+@media (max-width: 760px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: clamp(20px, 2.4vw, 32px);
+}
+.card .label {
+  font-family: var(--font-code);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent-pine);
+  margin-bottom: 8px;
+}
+.card .title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  color: var(--color-text);
+}
+.card p { color: var(--color-subtext); font-size: 15px; line-height: 1.55; }
+
+.prompt-block {
+  background: #F7F7F4;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  font-family: var(--font-code);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  position: relative;
+}
+.prompt-block .tag {
+  position: absolute;
+  top: 10px; right: 14px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-subtext);
+}
+.prompt-block.bad { background: #FAF6F2; }
+.prompt-block.bad .tag { color: #b07a52; }
+.prompt-block.good .tag { color: var(--color-accent-pine); }
+.prompt-block .k { color: var(--color-accent-pine); }
+.prompt-block .c { color: var(--color-subtext); font-style: italic; }
+.prompt-block .arr { color: var(--color-accent-fjord); }
+
+ul.dotlist { list-style: none; padding: 0; }
+ul.dotlist li {
+  position: relative;
+  padding-left: 22px;
+  margin: 10px 0;
+  color: var(--color-text);
+  font-size: clamp(15px, 1.3vw, 17px);
+  line-height: 1.55;
+}
+ul.dotlist li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0.62em;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-pine);
+}
+ul.dotlist li.muted::before { background: var(--color-mist); }
+
+/* ---------- title slide ---------- */
+.title-slide { align-items: flex-start; }
+.title-mark { margin-bottom: var(--space-xl); }
+.title-meta {
+  margin-top: var(--space-2xl);
+  display: flex;
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+  font-family: var(--font-code);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-subtext);
+}
+.title-meta span strong {
+  color: var(--color-text);
+  font-weight: 500;
+  margin-left: 6px;
+}
+
+/* ---------- anatomy / loop diagrams ---------- */
+.anatomy {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--space-xl);
+  align-items: center;
+}
+@media (max-width: 880px) { .anatomy { grid-template-columns: 1fr; } }
+.anatomy-stack { display: flex; flex-direction: column; gap: 8px; }
+.anatomy-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: var(--space-md);
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.anatomy-row .pill {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-pine);
+  background: #EEF1EA;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  text-align: center;
+  width: max-content;
+}
+.anatomy-row p { font-size: 14.5px; color: var(--color-text); }
+.anatomy-row p span { color: var(--color-subtext); }
+
+/* loop list (slide 3) */
+.loop-list {
+  display: grid;
+  gap: 10px;
+}
+.loop-step {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 14px;
+  align-items: baseline;
+  padding: 14px 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.loop-step .n {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 22px;
+  color: var(--color-accent-pine);
+  line-height: 1;
+}
+.loop-step .t {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+.loop-step .d {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  color: var(--color-subtext);
+}
+
+/* trace-style block for inspectability slide */
+.trace {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  font-family: var(--font-code);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.trace .step {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 12px;
+  padding: 6px 0;
+}
+.trace .step + .step { border-top: 1px dashed var(--color-border); }
+.trace .lbl {
+  color: var(--color-subtext);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding-top: 4px;
+}
+.trace .step .body { font-size: 13px; }
+.trace .ok  { color: var(--color-accent-pine); }
+.trace .arg { color: var(--color-accent-fjord); }
+
+/* ---------- takeaways ---------- */
+.takeaways {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: var(--space-md) var(--space-lg);
+  align-items: baseline;
+  max-width: 720px;
+}
+.takeaways .num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 36px;
+  color: var(--color-accent-pine);
+  line-height: 1;
+}
+.takeaways .t {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--color-text);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+.takeaways > *:nth-last-child(-n+2) .t,
+.takeaways > *:nth-last-child(-n+2).t { border-bottom: none; }
+
+/* ---------- nav ---------- */
+.nav {
+  position: absolute;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 6;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 6px 8px;
+}
+.nav button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  color: var(--color-text);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav button:hover { background: #EEF1EA; }
+.nav button:active { background: #E3E6E1; }
+.nav button[disabled] { opacity: 0.3; cursor: default; }
+.nav button[disabled]:hover { background: transparent; }
+.nav .dots { display: flex; gap: 6px; padding: 0 6px; }
+.nav .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-border);
+  transition: background 220ms ease, transform 220ms ease;
+}
+.nav .dot.is-active {
+  background: var(--color-accent-pine);
+  transform: scale(1.25);
+}
+
+.tapzone {
+  position: absolute;
+  top: 0; bottom: 80px;
+  width: 22%;
+  z-index: 4;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.tapzone.left { left: 0; }
+.tapzone.right { right: 0; }
+.tapzone::after {
+  content: '';
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid var(--color-border);
+}
+.tapzone.left::after  { left: 24px; }
+.tapzone.right::after { right: 24px; }
+@media (hover: hover) { .tapzone:hover::after { opacity: 1; } }
+
+.hint {
+  position: absolute;
+  bottom: 92px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-code);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-subtext);
+  opacity: 0;
+  animation: hintFade 4.5s 1.4s ease forwards;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 5;
+}
+@keyframes hintFade {
+  0%   { opacity: 0; transform: translate(-50%, 6px); }
+  18%  { opacity: 0.9; transform: translate(-50%, 0); }
+  78%  { opacity: 0.9; }
+  100% { opacity: 0; }
+}
+
+/* ---------- example slides (worked agents) ---------- */
+.slide.example {
+  padding-top: clamp(64px, 8vh, 96px);
+  padding-bottom: clamp(80px, 10vh, 110px);
+}
+.example-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(20px, 3vw, 44px);
+  align-items: stretch;
+}
+@media (max-width: 880px) { .example-grid { grid-template-columns: 1fr; } }
+.example-grid .lead { display: flex; flex-direction: column; justify-content: center; }
+.example-grid .lead h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(22px, 2.6vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: var(--color-text);
+  margin-bottom: 14px;
+}
+.example-grid .lead h3 em { font-style: italic; color: var(--color-accent-pine); }
+.example-grid .lead p {
+  color: var(--color-subtext);
+  font-size: 14.5px;
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.example-grid .lead ul.tags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 0;
+}
+.example-grid .lead ul.tags li {
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-pine);
+  background: #EEF1EA;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+.example-grid .prompt-block {
+  font-size: 12.5px;
+  line-height: 1.62;
+  max-height: 64vh;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-top: 30px;
+}
+.example-grid .prompt-block .h {
+  display: block;
+  color: var(--color-accent-pine);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  font-size: 10px;
+  text-transform: uppercase;
+  margin: 14px 0 4px;
+}
+.example-grid .prompt-block .h:first-child { margin-top: 0; }
+
+ul.checklist {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 18px;
+  padding: 0;
+  margin-top: 4px;
+}
+@media (max-width: 760px) { ul.checklist { grid-template-columns: 1fr; } }
+ul.checklist li {
+  display: grid;
+  grid-template-columns: 12px 1fr;
+  gap: 10px;
+  align-items: start;
+  font-size: 13.5px;
+  color: var(--color-text);
+  line-height: 1.35;
+}
+ul.checklist li::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-pine);
+  margin-top: 6px;
+}
+ul.checklist li .meta {
+  display: block;
+  font-size: 12px;
+  color: var(--color-subtext);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+@media (max-width: 900px) {
+  .brandmark, .counter { top: 16px; }
+  .brandmark { left: 22px; }
+  .counter { right: 22px; }
+  .anatomy { gap: var(--space-lg); }
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck" role="region" aria-label="Agentic AI for PMs presentation">
+
+  <div class="progress" id="progress"></div>
+
+  <!-- brandmark: scatter dots connected by a thin trajectory line -->
+  <div class="brandmark" aria-hidden="true">
+    <svg width="26" height="22" viewBox="0 0 26 22" fill="none">
+      <path d="M3 17 L8 12 L13 14 L18 7 L23 4" stroke="#A8BDB6" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/>
+      <circle cx="3" cy="17" r="1.6" fill="#6F7F6A"/>
+      <circle cx="8" cy="12" r="1.6" fill="#6F7F6A"/>
+      <circle cx="13" cy="14" r="1.6" fill="#A8BDB6"/>
+      <circle cx="18" cy="7" r="1.6" fill="#6F7F6A"/>
+      <circle cx="23" cy="4" r="1.6" fill="#6F7F6A"/>
+    </svg>
+    <span>Agentic · for PMs</span>
+  </div>
+  <div class="counter" id="counter">01 / 15</div>
+
+  <!-- =================== SLIDE 1 · TITLE =================== -->
+  <section class="slide title-slide is-active" data-slide="1">
+    <div class="title-mark reveal" aria-hidden="true">
+      <svg width="80" height="44" viewBox="0 0 80 44" fill="none">
+        <path d="M4 36 L16 28 L26 30 L36 20 L48 14 L60 8 L74 4" stroke="#A8BDB6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/>
+        <circle cx="4"  cy="36" r="2.6" fill="#6F7F6A"/>
+        <circle cx="16" cy="28" r="2.6" fill="#6F7F6A"/>
+        <circle cx="26" cy="30" r="2.6" fill="#A8BDB6"/>
+        <circle cx="36" cy="20" r="2.6" fill="#6F7F6A"/>
+        <circle cx="48" cy="14" r="2.6" fill="#6F7F6A"/>
+        <circle cx="60" cy="8"  r="2.6" fill="#8FA9B8"/>
+        <circle cx="74" cy="4"  r="2.6" fill="#6F7F6A"/>
+      </svg>
+    </div>
+    <div class="eyebrow reveal">A working introduction · part two</div>
+    <h1 class="display reveal">Agentic AI<br/><em>for PMs.</em></h1>
+    <p class="lede reveal" style="margin-top: var(--space-lg);">A practical guide to systems that <em>do</em>, not just say —<br/>and the shape of the product surface they create.</p>
+    <div class="title-meta reveal">
+      <span>Audience <strong>Product Managers</strong></span>
+      <span>Length <strong>15 slides</strong></span>
+      <span>Reading <strong>~12 min</strong></span>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 2 · WHY =================== -->
+  <section class="slide" data-slide="2">
+    <div class="eyebrow reveal">01 · Why this matters</div>
+    <h2 class="heading reveal">An agent doesn't answer. <em>It acts.</em></h2>
+    <div class="grid-2 reveal" style="margin-top: var(--space-md);">
+      <div class="stack">
+        <p class="body">A chatbot returns text. An agent calls APIs, queries data, files tickets, drafts emails, books meetings. Each action has a consequence your customer can see — or can't undo.</p>
+        <p class="body subtext">If the prompt was the spec, the toolset is now the surface area. Both are yours to own.</p>
+      </div>
+      <div class="card">
+        <div class="label">Chatbot</div>
+        <div class="title">Prompt → Text</div>
+        <p>The model produces an answer. A person reads it and decides what to do.</p>
+        <div class="label" style="margin-top: 20px;">Agent</div>
+        <div class="title">Prompt + Tools → Actions</div>
+        <p>The model decides what to do, calls a tool, observes, and decides again — sometimes for many steps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 3 · WHAT IS AN AGENT =================== -->
+  <section class="slide" data-slide="3">
+    <div class="eyebrow reveal">02 · Definition</div>
+    <h2 class="heading reveal">An agent is a model in a <em>loop.</em></h2>
+    <div class="grid-2 reveal">
+      <p class="body">It looks at the current state. It decides on a next step. It uses one of its tools. It observes what came back. Then it does it again — until the goal is met, or it knows to stop.</p>
+      <div class="loop-list">
+        <div class="loop-step"><span class="n">1</span><div><span class="t">Observe</span><span class="d">What does the current state look like?</span></div></div>
+        <div class="loop-step"><span class="n">2</span><div><span class="t">Decide</span><span class="d">Which tool should I call, with what arguments?</span></div></div>
+        <div class="loop-step"><span class="n">3</span><div><span class="t">Act</span><span class="d">Call the tool. Wait for the result.</span></div></div>
+        <div class="loop-step"><span class="n">4</span><div><span class="t">Repeat</span><span class="d">…until the goal is met, or stop.</span></div></div>
+      </div>
+    </div>
+    <p class="lede reveal" style="margin-top: var(--space-lg);">A chatbot answers a turn. An agent runs a process.</p>
+  </section>
+
+  <!-- =================== SLIDE 4 · ANATOMY =================== -->
+  <section class="slide" data-slide="4">
+    <div class="eyebrow reveal">03 · Anatomy</div>
+    <h2 class="heading reveal">Five parts of a working agent.</h2>
+    <div class="anatomy reveal">
+      <div class="anatomy-stack">
+        <div class="anatomy-row"><span class="pill">Goal</span>   <p>What success looks like. <span>One sentence the agent can check itself against.</span></p></div>
+        <div class="anatomy-row"><span class="pill">Tools</span>  <p>The actions it can take. <span>Each one named, scoped, and described.</span></p></div>
+        <div class="anatomy-row"><span class="pill">Context</span><p>What it knows on start. <span>Docs, data, prior steps, retrieved evidence.</span></p></div>
+        <div class="anatomy-row"><span class="pill">Policy</span> <p>How it chooses what to do next. <span>The prompt — but now about behavior, not output.</span></p></div>
+        <div class="anatomy-row"><span class="pill">Stop</span>   <p>When to halt. <span>Goal met, budget spent, or stuck — each is a stop.</span></p></div>
+      </div>
+      <p class="lede">You don't need all five every time. But every missing piece is a failure mode waiting to happen.</p>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 5 · TOOLS ARE THE PRODUCT =================== -->
+  <section class="slide" data-slide="5">
+    <div class="eyebrow reveal">Principle 1</div>
+    <h2 class="heading reveal">Tools are the <em>product.</em></h2>
+    <div class="grid-2 reveal">
+      <div class="prompt-block bad">
+<span class="tag">loose</span>
+Agent has access to:
+ - our API
+ - our database
+ - email
+      </div>
+      <div class="prompt-block good">
+<span class="tag">scoped</span>
+Agent has exactly these tools:
+
+<span class="k">search_orders(date_from, date_to)</span>
+  <span class="arr">→</span> top 50, read-only
+
+<span class="k">draft_reply(order_id, body)</span>
+  <span class="arr">→</span> draft only; never sends
+
+<span class="k">escalate(order_id, reason)</span>
+  <span class="arr">→</span> opens a ticket;
+    never auto-resolves
+      </div>
+    </div>
+    <p class="body reveal subtext" style="margin-top: var(--space-md); max-width: 62ch;">If you can't list the tools, you can't review the agent. The toolset is the most reviewable part of the whole system — use it.</p>
+  </section>
+
+  <!-- =================== SLIDE 6 · BOUND AUTONOMY =================== -->
+  <section class="slide" data-slide="6">
+    <div class="eyebrow reveal">Principle 2</div>
+    <h2 class="heading reveal">Decide what it can do <em>without asking.</em></h2>
+    <div class="grid-2 reveal">
+      <div class="card">
+        <div class="label">Questions to answer before shipping</div>
+        <ul class="dotlist" style="margin-top: 8px;">
+          <li>Maximum steps before stopping?</li>
+          <li>Maximum budget before pausing?</li>
+          <li>Which actions require human confirmation?</li>
+          <li>Which actions are irreversible?</li>
+          <li class="muted">Who gets paged when it fails?</li>
+        </ul>
+      </div>
+      <p class="lede">Autonomy is a slider, not a switch. Start low. Earn each notch with real evidence the agent behaved.</p>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 7 · INSPECTABILITY =================== -->
+  <section class="slide" data-slide="7">
+    <div class="eyebrow reveal">Principle 3</div>
+    <h2 class="heading reveal">If you can't see what it did, <em>you can't trust it.</em></h2>
+    <div class="grid-2 reveal">
+      <p class="body">Every tool call, every argument, every result — recorded. The trace is how the team debugs, how customers complain effectively, and how you find out the agent is silently broken.</p>
+      <div class="trace">
+        <div class="step"><span class="lbl">step 1</span><span class="body"><span class="ok">search_orders</span>(<span class="arg">"2026-05-15"</span>, <span class="arg">"2026-05-21"</span>)<br/><span class="c">→ 23 matches</span></span></div>
+        <div class="step"><span class="lbl">step 2</span><span class="body"><span class="ok">read_order</span>(<span class="arg">"o_3819"</span>)<br/><span class="c">→ status: shipped, complaint about delay</span></span></div>
+        <div class="step"><span class="lbl">step 3</span><span class="body"><span class="ok">draft_reply</span>(<span class="arg">"o_3819"</span>, body=…)<br/><span class="c">→ awaiting human review</span></span></div>
+      </div>
+    </div>
+    <p class="body reveal subtext" style="margin-top: var(--space-md); max-width: 62ch;">Build the flight recorder before the cleverness. You will need it on day one, not month three.</p>
+  </section>
+
+  <!-- =================== SLIDE 8 · FAILURE MODES =================== -->
+  <section class="slide" data-slide="8">
+    <div class="eyebrow reveal">Principle 4</div>
+    <h2 class="heading reveal">Agents fail in <em>new</em> ways.</h2>
+    <div class="grid-2 reveal">
+      <div class="stack-sm">
+        <div class="card">
+          <div class="title" style="font-size: 19px;">Loops</div>
+          <p>Same tool, same arguments, three times in a row. Cap retries. Detect repetition.</p>
+        </div>
+        <div class="card">
+          <div class="title" style="font-size: 19px;">Wrong arguments</div>
+          <p>Hallucinated IDs, fabricated dates, made-up emails. Validate every input before the tool runs.</p>
+        </div>
+      </div>
+      <div class="stack-sm">
+        <div class="card">
+          <div class="title" style="font-size: 19px;">Runaway cost</div>
+          <p>500 API calls before anyone notices nothing's working. Step budget, token budget, hard alarm.</p>
+        </div>
+        <div class="card">
+          <div class="title" style="font-size: 19px;">Silent success</div>
+          <p>Agent reports "done" — but nothing actually changed. Verify the side effect, don't trust the summary.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 9 · ITERATE =================== -->
+  <section class="slide" data-slide="9">
+    <div class="eyebrow reveal">04 · Iteration</div>
+    <h2 class="heading reveal">Eval the <em>trajectory</em>, not just the answer.</h2>
+    <div class="grid-2 reveal">
+      <ul class="dotlist">
+        <li>Did it pick the right tool?</li>
+        <li>Did it call it with sensible arguments?</li>
+        <li>Did it stop at the right moment?</li>
+        <li>Did it ask for help when it should have?</li>
+        <li class="muted">Two agents can reach the same answer — one by luck, one by judgment.</li>
+      </ul>
+      <p class="lede">For a chatbot, the test is the output. For an agent, the test is the path.</p>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 10 · PITFALLS =================== -->
+  <section class="slide" data-slide="10">
+    <div class="eyebrow reveal">05 · Pitfalls</div>
+    <h2 class="heading reveal">Where agents <em>quietly</em> go wrong.</h2>
+    <div class="grid-2 reveal">
+      <div class="stack-sm">
+        <div class="card">
+          <div class="title" style="font-size: 19px;">"Give it everything"</div>
+          <p>A massive toolset with vague descriptions. Few sharp tools beat many fuzzy ones.</p>
+        </div>
+        <div class="card">
+          <div class="title" style="font-size: 19px;">No human in the loop</div>
+          <p>Day-one agent sends emails to real customers. Stage the autonomy — review, then assist, then act.</p>
+        </div>
+      </div>
+      <div class="stack-sm">
+        <div class="card">
+          <div class="title" style="font-size: 19px;">Chatbot-shaped evals</div>
+          <p>"Was the answer good?" is the wrong question. Ask: "was that a defensible sequence of actions?"</p>
+        </div>
+        <div class="card">
+          <div class="title" style="font-size: 19px;">No fallback path</div>
+          <p>When the agent fails, what does the user see? A queue? A human? A nothing? Decide before shipping.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 11 · EXAMPLE 1 · RESEARCH AGENT =================== -->
+  <section class="slide example" data-slide="11">
+    <div class="eyebrow reveal">Worked example · 01 of 04</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">A <em>research</em> agent.</h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>From topic to sourced brief, in steps.</h3>
+        <p>Where the prompting deck synthesized transcripts you already had, this agent goes and gets the material itself — searching, fetching, taking notes, knowing when to stop.</p>
+        <p>Same goal as a research prompt. Different shape: it's a process, not a single turn.</p>
+        <ul class="tags">
+          <li>Tools</li><li>Policy</li><li>Stop</li><li>Citations</li>
+        </ul>
+      </div>
+      <div class="prompt-block good">
+<span class="tag">agent spec</span>
+<span class="h">Goal</span>Produce a one-page sourced brief
+on <span class="k">[topic]</span> for an internal PM
+audience.
+
+<span class="h">Tools</span><span class="k">web_search</span>(query)
+  <span class="arr">→</span> top 5 results
+
+<span class="k">fetch</span>(url)
+  <span class="arr">→</span> extracted page text
+
+<span class="k">note</span>(claim, source_url)
+  <span class="arr">→</span> appends to working brief
+
+<span class="h">Policy</span>1. Start with 2 broad searches to
+   map the topic.
+2. Then 3 narrow searches for
+   specific claims.
+3. Every <span class="k">note()</span> must cite a real
+   source_url returned by fetch().
+4. If two sources disagree,
+   surface the disagreement.
+
+<span class="h">Stop</span> - after 8 search-or-fetch calls, OR
+ - when 3 sources confirm the main
+   finding, OR
+ - if 4 searches return nothing
+   useful — return what you have
+   and flag the gap.
+
+<span class="h">Output</span>Markdown brief with inline
+citations. Sources at the bottom.
+Open questions at the end.
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 12 · EXAMPLE 2 · ANALYST AGENT =================== -->
+  <section class="slide example" data-slide="12">
+    <div class="eyebrow reveal">Worked example · 02 of 04</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">An <em>analyst</em> agent.</h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>Estimates with the math actually done.</h3>
+        <p>The prompting deck asked for stated-assumption estimates. The analyst agent goes further: it queries the data, runs the numbers, and writes the report — showing the SQL it used and the formula it ran.</p>
+        <p>The PM argues with the assumptions, not the conclusion.</p>
+        <ul class="tags">
+          <li>Tools</li><li>Code</li><li>Confidence</li><li>Table out</li>
+        </ul>
+      </div>
+      <div class="prompt-block good">
+<span class="tag">agent spec</span>
+<span class="h">Goal</span>Estimate the impact of the 8
+candidate features in this quarter's
+shortlist, using real numbers from
+our product data.
+
+<span class="h">Tools</span><span class="k">query_db</span>(sql)
+  <span class="arr">→</span> read-only, against:
+    product_events, feedback,
+    subscriptions
+
+<span class="k">run_python</span>(code)
+  <span class="arr">→</span> for calculation &amp; modeling
+
+<span class="k">write_report</span>(content)
+  <span class="arr">→</span> final markdown out
+
+<span class="h">Policy</span>1. For each feature, define a
+   measurable proxy:
+   "% MAU affected" = users who
+   touched [related event] in 30d.
+2. Use <span class="k">query_db</span> to count.
+   Never guess a number.
+3. Use <span class="k">run_python</span> for revenue
+   projection, with a stated formula.
+4. Confidence below 60% → flag ⚠.
+
+<span class="h">Stop</span> - all 8 features have an estimate, OR
+ - 3 consecutive queries return
+   empty (data is missing), OR
+ - 20 total tool calls.
+
+<span class="h">Output</span>Table: Feature | %MAU | $/mo |
+Confidence | Key assumption | Query.
+SQL of each query appended.
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 13 · EXAMPLE 3 · PROJECT AS CONSTITUTION =================== -->
+  <section class="slide example" data-slide="13">
+    <div class="eyebrow reveal">Worked example · 03 of 04</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">Project files as a <em>constitution.</em></h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>Standing rules the agent <em>consults</em> every step.</h3>
+        <p>Same files you'd put in a prompt — but the agent reads them before each decision, the way a new hire consults the company handbook before sending anything to a customer.</p>
+        <ul class="checklist">
+          <li><div>Vision doc<span class="meta">One-page product intent</span></div></li>
+          <li><div>OKRs<span class="meta">Quarterly outcomes &amp; metrics</span></div></li>
+          <li><div>ICP<span class="meta">Who we sell to, who we don't</span></div></li>
+          <li><div>Glossary<span class="meta">Terms, acronyms, naming</span></div></li>
+          <li><div>Roadmap<span class="meta">In-flight and next-up</span></div></li>
+          <li><div>Style guide<span class="meta">Voice for customer copy</span></div></li>
+          <li><div>Decision log<span class="meta">What we chose, why</span></div></li>
+          <li><div>Constraints<span class="meta">Legal, compliance, tech</span></div></li>
+        </ul>
+      </div>
+      <div class="prompt-block good">
+<span class="tag">agent spec</span>
+<span class="h">Goal</span>Help the PM scope any incoming
+feature request, grounded in the
+team's standing decisions.
+
+<span class="h">Constitution</span><span class="c">read before every run</span>
+ - /project/vision.md
+ - /project/okrs-q3.md
+ - /project/icp.md
+ - /project/constraints.md
+ - /project/decision-log.md
+
+<span class="h">Tools</span><span class="k">read_project</span>(path)
+<span class="k">draft_brief</span>(content)
+<span class="k">flag_block</span>(reason)
+
+<span class="h">Policy</span>For each new request:
+1. Match it to the most relevant
+   OKR. If none, say so.
+2. Check whether the audience is
+   inside our ICP. If outside, flag.
+3. Check constraints.md for any
+   triggers. Be precise.
+4. Search decision-log.md for prior
+   versions of this idea.
+5. Only after those four checks,
+   draft a feature description
+   in the style-guide voice.
+
+<span class="h">Stop</span>After all five steps complete,
+or any check returns a hard block.
+
+<span class="h">Output</span>A scoping brief. Every non-trivial
+claim cites the project file it
+came from, by filename.
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 14 · EXAMPLE 4 · TRIAGE AGENT =================== -->
+  <section class="slide example" data-slide="14">
+    <div class="eyebrow reveal">Worked example · 04 of 04</div>
+    <h2 class="heading reveal" style="font-size: clamp(24px, 3.4vw, 40px); margin-bottom: var(--space-md);">A <em>triage</em> agent.</h2>
+    <div class="example-grid reveal">
+      <div class="lead">
+        <h3>Many channels in. Sorted signal out. Human in the loop.</h3>
+        <p>Pulls feedback from multiple sources, classifies and clusters, drafts internal summaries and customer replies — but never sends without a person.</p>
+        <p>The full pattern: tools, bounded autonomy, escalation paths, draft-not-send by default.</p>
+        <ul class="tags">
+          <li>Tools</li><li>Cluster</li><li>Escalate</li><li>Confirm</li>
+        </ul>
+      </div>
+      <div class="prompt-block good">
+<span class="tag">agent spec</span>
+<span class="h">Goal</span>Triage incoming customer feedback
+from the past 24 hours. Prepare
+one internal digest + draft replies
+for human review.
+
+<span class="h">Tools</span><span class="k">fetch_feedback</span>(source, since)
+  <span class="arr">→</span> zendesk, app_reviews, slack
+
+<span class="k">classify</span>(text)
+  <span class="arr">→</span> bug | feature_request |
+    praise | confused | churn_risk
+
+<span class="k">draft_reply</span>(item_id, template)
+  <span class="arr">→</span> draft only — never sends
+
+<span class="k">escalate</span>(item_id, reason, owner)
+  <span class="arr">→</span> opens a ticket, notifies owner
+
+<span class="h">Policy</span>1. Pull from all three sources.
+2. Classify each item; cluster by
+   theme.
+3. <span class="k">churn_risk</span> → escalate to head
+   of CS immediately.
+4. <span class="k">bug + severity-high</span> →
+   escalate to on-call.
+5. Others → draft a reply in the
+   style-guide voice.
+6. Never send. Always present for
+   human confirmation.
+
+<span class="h">Stop</span>Every item classified, every
+escalation opened, every reply
+drafted.
+
+<span class="h">Output</span>Markdown digest: counts per class,
+top 3 themes, draft replies in a
+table, escalations summary.
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== SLIDE 15 · TAKEAWAYS =================== -->
+  <section class="slide" data-slide="15">
+    <div class="eyebrow reveal">In closing</div>
+    <h2 class="heading reveal">Four things to <em>remember.</em></h2>
+    <div class="takeaways reveal">
+      <div class="num">01</div><div class="t">An agent is a model in a loop with tools — not a chat.</div>
+      <div class="num">02</div><div class="t">Tools are the product surface. Bound them. Review them.</div>
+      <div class="num">03</div><div class="t">Inspect every step. Stage the autonomy. Earn each notch.</div>
+      <div class="num">04</div><div class="t">Eval the trajectory, not just the final answer.</div>
+    </div>
+    <p class="lede reveal" style="margin-top: var(--space-2xl);">Calm autonomy. Inspectable judgment.</p>
+  </section>
+
+  <!-- nav -->
+  <div class="nav" role="navigation" aria-label="slide controls">
+    <button id="prev" aria-label="Previous slide">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <button id="next" aria-label="Next slide">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="tapzone left"  id="tap-left"  aria-hidden="true"></div>
+  <div class="tapzone right" id="tap-right" aria-hidden="true"></div>
+
+  <div class="hint" id="hint">Swipe or tap to navigate · arrow keys also work</div>
+
+</div>
+
+<script>
+(function () {
+  const slides   = Array.from(document.querySelectorAll('.slide'));
+  const total    = slides.length;
+  const counter  = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  const prevBtn  = document.getElementById('prev');
+  const nextBtn  = document.getElementById('next');
+  const dotsWrap = document.getElementById('dots');
+  const tapL     = document.getElementById('tap-left');
+  const tapR     = document.getElementById('tap-right');
+  const deck     = document.getElementById('deck');
+
+  let i = 0;
+  let lock = false;
+  const LOCK_MS = 420;
+
+  slides.forEach((_, idx) => {
+    const d = document.createElement('span');
+    d.className = 'dot';
+    d.dataset.index = idx;
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function render() {
+    slides.forEach((s, idx) => s.classList.toggle('is-active', idx === i));
+    dots.forEach((d, idx) => d.classList.toggle('is-active', idx === i));
+    counter.textContent = pad(i + 1) + ' / ' + pad(total);
+    progress.style.width = (((i + 1) / total) * 100) + '%';
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === total - 1;
+  }
+
+  function go(delta) {
+    if (lock) return;
+    const next = Math.max(0, Math.min(total - 1, i + delta));
+    if (next === i) return;
+    i = next;
+    lock = true;
+    render();
+    setTimeout(() => { lock = false; }, LOCK_MS);
+  }
+  function goTo(idx) {
+    if (lock || idx === i) return;
+    i = Math.max(0, Math.min(total - 1, idx));
+    lock = true;
+    render();
+    setTimeout(() => { lock = false; }, LOCK_MS);
+  }
+
+  prevBtn.addEventListener('click', () => go(-1));
+  nextBtn.addEventListener('click', () => go(1));
+  dots.forEach(d => d.addEventListener('click', () => goTo(parseInt(d.dataset.index, 10))));
+  tapL.addEventListener('click', () => go(-1));
+  tapR.addEventListener('click', () => go(1));
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault(); go(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'Backspace') {
+      e.preventDefault(); go(-1);
+    } else if (e.key === 'Home') {
+      goTo(0);
+    } else if (e.key === 'End') {
+      goTo(total - 1);
+    }
+  });
+
+  // swipe (touch) — iPad first
+  let touchStartX = 0, touchStartY = 0, touchStartT = 0, swiping = false;
+  const THRESH_X = 50;
+  const THRESH_T = 600;
+  const MAX_Y    = 80;
+
+  deck.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0];
+    touchStartX = t.clientX;
+    touchStartY = t.clientY;
+    touchStartT = Date.now();
+    swiping = true;
+  }, { passive: true });
+
+  deck.addEventListener('touchend', (e) => {
+    if (!swiping) return;
+    swiping = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    const dt = Date.now() - touchStartT;
+    if (dt > THRESH_T) return;
+    if (Math.abs(dy) > MAX_Y) return;
+    if (Math.abs(dx) < THRESH_X) return;
+    go(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  let pStartX = null;
+  deck.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (e.pointerType === 'touch') return;
+    pStartX = e.clientX;
+  });
+  deck.addEventListener('pointerup', (e) => {
+    if (pStartX == null) return;
+    const dx = e.clientX - pStartX;
+    pStartX = null;
+    if (Math.abs(dx) >= 80) go(dx < 0 ? 1 : -1);
+  });
+
+  function readHash() {
+    const m = (location.hash || '').match(/^#(\d+)$/);
+    if (m) {
+      const idx = Math.max(0, Math.min(total - 1, parseInt(m[1], 10) - 1));
+      i = idx;
+    }
+  }
+  readHash();
+  window.addEventListener('hashchange', () => { readHash(); render(); });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
