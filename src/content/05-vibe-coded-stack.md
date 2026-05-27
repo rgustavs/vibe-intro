@@ -3,7 +3,7 @@ type: title
 eyebrow: A working introduction · chapter five
 title: The Vibe-Coded|*Stack.*
 @@
-How AI puts full-stack architecture together —|Node.js, FastAPI, and SQLite.
+How an AI assembles the pieces of a real app —|a React front end, a FastAPI back end, and SQLite.
 
 ===
 
@@ -15,8 +15,8 @@ title: From single scripts to *actual apps.*
 :::html
 <div class="grid-2 reveal" style="margin-top: var(--space-md);">
   <div class="stack">
-    <p class="body">"Vibe coding" started as generating single-file Python scripts. But products require a user interface, a place to store data, and business logic connecting the two.</p>
-    <p class="body subtext">To vibe-code a real product, you need to understand the architectural boundaries. AI is incredibly fast at writing code, but it still needs you to dictate the blueprint.</p>
+    <p class="body">"Vibe coding" started as generating single-file scripts. But real products need a screen people can use, a place to store data, and some logic connecting the two.</p>
+    <p class="body subtext">This chapter is a little more technical than the others — but you still won't write the code. You just need to recognise the parts, so you can point the agent at the right one.</p>
   </div>
   <div class="card">
     <div class="label">The Monolith Myth</div>
@@ -63,10 +63,10 @@ eyebrow: 03 · Architecture anatomy
 title: Three layers of a modern Vibe App.
 @@
 :::anatomy
-- Node / React | The Frontend (UI/UX) | Runs in the user's browser. Fetches data, displays buttons, handles clicks.
-- middle: FastAPI | The Backend (API) | Runs on a server. Holds secret keys, talks to AI models, processes data safely.
-- bottom: SQLite | The Database (State) | Stores the actual articles. A simple file on the server.
-lede: AI knows this stack perfectly. If you ask for a "React, FastAPI, SQLite stack," it knows exactly how to wire them together.
+- React | The front end (what users see) | Runs in the user's browser. Fetches data, displays buttons, handles clicks.
+- middle: FastAPI | The back end (the API) | Runs on a server. Holds secret keys, talks to AI models, processes data safely.
+- bottom: SQLite | The database (the data) | Stores the actual articles. A simple file on the server.
+lede: AI knows this stack well. Ask for a "React, FastAPI, SQLite stack" and it knows exactly how to wire the parts together.
 :::
 
 ===
@@ -74,13 +74,13 @@ lede: AI knows this stack perfectly. If you ask for a "React, FastAPI, SQLite st
 @@
 type: default
 eyebrow: Layer 1
-title: The Frontend: *Node & React.*
+title: The front end: *React.*
 @@
 :::html
 <div class="grid-2 reveal">
   <div class="stack">
-    <p class="body">Why Node.js/React? Because LLMs are trained on millions of React examples. They generate beautiful Tailwind CSS components flawlessly.</p>
-    <p class="body subtext">The frontend's only job is to look good and make HTTP requests (fetch) to the backend. It should contain <em>zero</em> business logic or database queries.</p>
+    <p class="body">Why React? Because AI models have seen millions of React examples, so they produce tidy, good-looking screens reliably. (Node is just the tooling that runs it.)</p>
+    <p class="body subtext">The front end's only job is to look good and ask the back end for data. It should hold <em>no</em> business logic and never touch the database directly.</p>
   </div>
   <div class="card">
     <div class="label">For the Knowledgebase</div>
@@ -105,8 +105,8 @@ title: The Backend: *FastAPI.*
 :::html
 <div class="grid-2 reveal">
   <div class="stack">
-    <p class="body">Why FastAPI (Python)? Because Python is the undisputed lingua franca of AI. If you want to add RAG, embeddings, or agent logic later, the tools are in Python.</p>
-    <p class="body subtext">FastAPI is lightweight, incredibly fast, and automatically documents itself (Swagger UI), which helps the AI agent understand the API it just wrote.</p>
+    <p class="body">Why FastAPI (Python)? Because Python is the main language of AI. If you want to add smarter AI features later, the tools you'll need are already in Python.</p>
+    <p class="body subtext">FastAPI is light, fast, and documents itself automatically — which also helps the agent understand the API it just wrote.</p>
   </div>
   <div class="card">
     <div class="label">For the Knowledgebase</div>
@@ -158,12 +158,12 @@ title: Where the vibe *breaks.*
 <div class="grid-2 reveal">
   <div class="stack-sm">
     <div class="card">
-      <div class="title" style="font-size: 19px;">CORS Errors</div>
-      <p>The #1 vibe killer. The React frontend (port 3000) tries to call FastAPI (port 8000), and the browser blocks it. Tell the AI: "Configure CORS on the FastAPI app."</p>
+      <div class="title" style="font-size: 19px;">CORS errors</div>
+      <p>A very common snag. The React front end tries to call FastAPI on a different port, and the browser blocks it. Just tell the agent: "Configure CORS on the FastAPI app."</p>
     </div>
     <div class="card">
-      <div class="title" style="font-size: 19px;">Premature optimization</div>
-      <p>Asking the AI for Redis caching, Docker Swarm, and Postgres on day one. Start with SQLite. Upgrade when it breaks.</p>
+      <div class="title" style="font-size: 19px;">Premature optimisation</div>
+      <p>Asking the AI for heavy infrastructure on day one. Start with SQLite. Upgrade only when something actually breaks.</p>
     </div>
   </div>
   <div class="stack-sm">
@@ -254,7 +254,7 @@ app = FastAPI()
 @@
 type: example
 eyebrow: Worked example · 03 of 04
-title: The *Face* (Node/React).
+title: The *Face* (React).
 @@
 :::example
 lead:
@@ -299,8 +299,8 @@ title: The *Architecture Prompt.*
 :::example
 lead:
 ### Telling the agent how to build it.
-When you sit down with an AI coding assistant (like Cursor, Claude, or Antigravity), you don't ask it to "build an app."
-You explicitly define the architecture stack so it wires the pieces correctly from step one.
+When you sit down with your agent (in VS Code or Antigravity), you don't ask it to "build an app."
+You spell out the stack, so it wires the pieces together correctly from step one.
 tags: System Prompt, Context, Architecture
 ---
 tag: vibe prompt
