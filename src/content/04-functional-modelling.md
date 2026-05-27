@@ -10,21 +10,21 @@ AI builds exactly what you ask for.|How to write complete, consistent requiremen
 @@
 type: default
 eyebrow: 01 · Why this matters
-title: AI amplifies *bad requirements.*
+title: AI amplifies *vague requirements.*
 @@
 :::html
 <div class="grid-2 reveal" style="margin-top: var(--space-md);">
   <div class="stack">
-    <p class="body">In the past, if you wrote a vague spec, a human engineer would walk over to your desk and ask, "What happens if the user has no data?"</p>
-    <p class="body subtext">An AI won't ask. It will invent a solution. Often, it will invent a hallucinated logic loop that takes hours to untangle. The bottleneck has shifted from <em>writing code</em> to <em>defining exact behavior</em>.</p>
+    <p class="body">In the past, if you wrote a vague request, a human engineer would wander over and ask, "What happens if the user has no data yet?"</p>
+    <p class="body subtext">An AI won't ask. It quietly invents an answer — and if it guesses wrong, untangling it later can take hours. The hard part has shifted from <em>writing the code</em> to <em>describing exactly what you want</em>.</p>
   </div>
   <div class="card">
-    <div class="label">Human Developer</div>
-    <div class="title">Implicit translation</div>
-    <p>Humans fill in the gaps using common sense and organizational context.</p>
-    <div class="label" style="margin-top: 20px;">AI Developer</div>
-    <div class="title">Explicit execution</div>
-    <p>AI writes exactly what you specify. If the rules contradict, it writes conflicting code silently.</p>
+    <div class="label">A human developer</div>
+    <div class="title">Fills in the gaps</div>
+    <p>People use common sense and what they know about your team to guess what you meant.</p>
+    <div class="label" style="margin-top: 20px;">An AI developer</div>
+    <div class="title">Does exactly what you say</div>
+    <p>It builds precisely what you describe. If your rules contradict each other, it picks one quietly.</p>
   </div>
 </div>
 :::
@@ -79,7 +79,7 @@ title: *Completeness:* The happy path is only 20%.
 :::html
 <div class="grid-2 reveal">
   <div class="stack">
-    <p class="body">Most PMs write specs for the "Happy Path"—when everything works perfectly. AI needs you to explicitly define the negative paths.</p>
+    <p class="body">It's natural to describe only the "happy path" — when everything works perfectly. The AI needs you to spell out the unhappy paths too.</p>
     <ul class="dotlist" style="margin-top: 16px;">
       <li>What happens when the database is empty?</li>
       <li>What happens if the API times out?</li>
@@ -107,15 +107,15 @@ title: *Consistency:* Resolving contradictions.
 :::html
 <div class="grid-2 reveal">
   <div class="card">
-    <div class="label">Contradictory Rules</div>
-    <div class="title">The silent killer</div>
+    <div class="label">Contradictory rules</div>
+    <div class="title">Easy to miss</div>
     <p>Rule A: "Users can delete their own comments."</p>
     <p>Rule B: "Once a thread is locked, no changes can be made."</p>
-    <p style="margin-top: 10px; color: #b07a52;">AI will arbitrarily pick one. You must specify: <em>"Thread locks supersede user delete rights."</em></p>
+    <p style="margin-top: 10px; color: #b07a52;">The AI will quietly pick one. You need to say which wins: <em>"A locked thread overrides the right to delete."</em></p>
   </div>
   <div class="stack">
-    <p class="body">AI models read top-to-bottom. If you have conflicting logic scattered across a 4-page document, the AI will write buggy code.</p>
-    <p class="body subtext">Functional analysis forces you to reconcile overlapping rules before generating a single line of React.</p>
+    <p class="body">AI reads top to bottom. If conflicting rules are scattered across a long document, the AI can write buggy code without flagging it.</p>
+    <p class="body subtext">Working through the behaviour first forces you to reconcile overlapping rules before the agent writes a single line of code.</p>
   </div>
 </div>
 :::
@@ -132,7 +132,7 @@ title: Where requirements *break* the AI.
   <div class="stack-sm">
     <div class="card">
       <div class="title" style="font-size: 19px;">"Make it like Stripe"</div>
-      <p>Assuming the AI shares your mental model of a third-party app. Be literal. Describe the exact behavior, not the analogy.</p>
+      <p>Assuming the AI shares your mental model of a third-party app. Be literal. Describe the exact behaviour, not the analogy.</p>
     </div>
     <div class="card">
       <div class="title" style="font-size: 19px;">Implicit Variables</div>
@@ -141,12 +141,12 @@ title: Where requirements *break* the AI.
   </div>
   <div class="stack-sm">
     <div class="card">
-      <div class="title" style="font-size: 19px;">Mixing "What" and "How"</div>
-      <p>Telling the AI to use a specific `useEffect` loop instead of defining the functional requirement. Define the behavior, let the AI write the syntax.</p>
+      <div class="title" style="font-size: 19px;">Mixing "what" and "how"</div>
+      <p>Telling the AI exactly how to build it in code, instead of describing the behaviour you want. Describe the behaviour; let the AI write the syntax.</p>
     </div>
     <div class="card">
-      <div class="title" style="font-size: 19px;">The "Etc." cop-out</div>
-      <p>"Show fields for name, email, etc." The AI will literally generate random fields to fill the "etc." Exhaustive lists only.</p>
+      <div class="title" style="font-size: 19px;">The "etc." trap</div>
+      <p>"Show fields for name, email, etc." The AI will invent random fields to fill in the "etc." List everything you actually want.</p>
     </div>
   </div>
 </div>
@@ -187,7 +187,7 @@ title: The *Functional* version.
 :::example
 lead:
 ### This is what you feed the AI.
-By defining the exact inputs, validation rules, state changes, and negative paths, you leave zero room for the LLM to invent incorrect behavior.
+By defining the exact inputs, validation rules, state changes, and unhappy paths, you leave no room for the AI to invent incorrect behaviour.
 ---
 tag: Functional Spec
 [h]Feature: Apply Promo Code[/h]
@@ -221,7 +221,7 @@ title: Formatting for AI: *Given / When / Then*.
 :::example
 lead:
 ### The language of logic.
-Behavior-Driven Development (BDD) formatting is a superpower when prompting AI. LLMs are trained heavily on this format.
+Behaviour-Driven Development (BDD) formatting is a quiet superpower when prompting AI — these models have seen a great deal of it.
 It forces you to declare the initial state (Given), the trigger (When), and the exact expected result (Then).
 tags: BDD, Gherkin, State mapping
 ---
@@ -287,16 +287,16 @@ title: Using *Agent Skills* for analysis.
 :::html
 <div class="grid-2 reveal">
   <div class="stack">
-    <p class="body">Writing a perfect functional spec from scratch is hard. You will naturally miss edge cases and contradictory rules.</p>
-    <p class="body subtext">Instead of struggling alone, you can use specialized Agent Skills to help you <em>discover</em> and <em>stress-test</em> your requirements before you ever ask an agent to write code.</p>
+    <p class="body">Writing a complete spec from scratch is hard. You'll naturally miss edge cases and contradictory rules.</p>
+    <p class="body subtext">An <em>Agent Skill</em> is a saved instruction you summon by name — think of it as handing the agent a specific job. Two of them help you <em>discover</em> and <em>stress-test</em> your requirements before you ever ask an agent to write code.</p>
   </div>
   <div class="card">
-    <div class="label">Step 1: Discovery</div>
-    <div class="title">The Brainstorm Skill</div>
-    <p>Use it to diverge. Force the AI to find edge cases, weird states, and negative paths you haven't considered.</p>
-    <div class="label" style="margin-top: 20px;">Step 2: Validation</div>
-    <div class="title">The Grill Me Skill</div>
-    <p>Use it to converge. Force the AI to attack your written logic and find the contradictions.</p>
+    <div class="label">Step 1: Discover</div>
+    <div class="title">The Brainstorm skill</div>
+    <p>Use it to open things up — let the AI surface edge cases, odd states, and unhappy paths you haven't considered.</p>
+    <div class="label" style="margin-top: 20px;">Step 2: Validate</div>
+    <div class="title">The Grill Me skill</div>
+    <p>Use it to tighten things up — let the AI pick at your written logic and point out the contradictions.</p>
   </div>
 </div>
 :::
@@ -375,9 +375,9 @@ eyebrow: In closing
 title: Four things to *remember.*
 @@
 :::takeaways
-AI amplifies vagueness. The bottleneck is now exact requirement definition.
-Use BDD (Given/When/Then) to structure logic clearly for the agent.
-Use the *Brainstorm* skill to discover the negative paths and edge cases.
-Use the *Grill Me* skill to aggressively QA your logic before generating code.
-lede: Rigorous thinking. Flawless execution.
+AI amplifies vagueness — the hard part is now describing exactly what you want.
+Use BDD (Given/When/Then) to lay out the logic clearly for the agent.
+Use the *Brainstorm* skill to discover the unhappy paths and edge cases.
+Use the *Grill Me* skill to check your logic for holes before generating code.
+lede: Clear thinking. Calm execution.
 :::
