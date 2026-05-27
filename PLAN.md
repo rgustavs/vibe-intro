@@ -1,7 +1,16 @@
 # Syllabus — remaining work
 
-Tracks the outstanding items from the syllabus review. The series currently has
-six chapters (01 What is Vibe Coding → 06 Shipping It), all building cleanly.
+Tracks the outstanding items from the syllabus review. The series now has
+eight chapters, all building cleanly:
+
+1. What is vibe coding
+2. Describing what you want *(new — beginner)*
+3. Setting up the tools
+4. Version control basics
+5. The vibe-coded stack
+6. Functional modelling *(moved later — advanced deep dive)*
+7. Debugging & verifying *(new)*
+8. Shipping it
 
 ## 1. Browser QA of the new/edited chapters
 - **Why:** chapter 06 and the chapter 04–05 edits were verified to *build* with no
@@ -11,37 +20,25 @@ six chapters (01 What is Vibe Coding → 06 Shipping It), all building cleanly.
   the 05→06 "Next chapter" link.
 - **Done when:** chapter 06 looks visually consistent with chapters 01–03.
 
-## 2. Add a "Debugging & verifying" chapter
-- **Why:** the one gap still open from the review — "paste the error, say what you
-  expected, say what you saw" and confirming the thing actually works. Chapter 01
-  raises "it's broken" as a pitfall but nothing teaches the fix.
-- **Do:** new `src/content/NN-debugging.md` + `series.json` entry, same slide arc and
-  calm/British tone as chapters 01–03. Likely sits after 03 (version control) or
-  alongside 06. Decide placement as part of item 3.
-- **Done when:** builds clean, chains in order, reads like a chapter-1–3 sibling.
+## 2. Add a "Debugging & verifying" chapter — DONE
+- Added `src/content/07-debugging-and-verifying.md` (chapter 07, near shipping) plus
+  its `series.json` entry. Teaches the fix for "it's broken": report what you did /
+  expected / saw with the exact error, change one thing at a time, then verify.
+- Builds clean and chains 06 → 07 → 08.
 
-## 3. Reconsider chapter order
-- **Why:** "describing behaviour clearly" (ch 04) is the core skill, introduced
-  conceptually in ch 01. A beginner-level slice of it could come earlier (before
-  tools), leaving the advanced BDD/state-machine material as a later deep dive.
-- **Do:** decide whether to split ch 04 into a beginner "describing what you want"
-  chapter (early) + an advanced "functional modelling" chapter (later). Reordering is
-  a `series.json` array change plus possible file renames; chaining is automatic.
-- **Open question:** confirm the intended learning order with the owner before moving
-  chapters, since it changes the whole arc.
+## 3. Reconsider chapter order — DONE
+- Split per owner decision: new beginner "Describing what you want" chapter added
+  early as chapter 02; the advanced functional-modelling deck moved later to
+  chapter 06 as a deep dive. File renames + `series.json` reorder; chaining is automatic.
 
-## 4. Fold "Prompting" back into the path
-- **Context:** the standalone `prompting-for-pms` deck was removed from the repo; its
-  content lives in git history (and `Functional analysis .txt` / `Vibe coded stack .txt`
-  remain as source notes).
-- **Why:** prompting overlaps the series' core skill and arguably deserves a proper
-  beginner chapter rather than a separate PM-pitched deck.
-- **Do:** if wanted, rewrite it as a new `src/content/` chapter in the unified
-  audience/tone, recovering useful material from history (`git show <rev>:prompting-for-pms.html`).
+## 4. Fold "Prompting" back into the path — DEFERRED
+- **Decision:** skipped for now (owner's call). Prompting content remains in git
+  history (and `Functional analysis .txt` / `Vibe coded stack .txt` as source notes).
+- The new beginner chapter 02 already covers the core "describe clearly" skill, so a
+  separate prompting chapter is lower priority. Revisit if a PM-pitched angle is wanted.
 
 ## 5. Open a PR
 - Branch `claude/syllabus-outline-review-6lex4` is pushed but no PR exists yet.
 - Open one once the owner is happy with the chapter set and order.
 
-> Sequencing note: settle item 3 (order) before investing in items 2 and 4, since
-> placement of new chapters depends on the final arc.
+> Remaining: item 1 (browser QA of the new/edited chapters) and item 5 (open a PR).

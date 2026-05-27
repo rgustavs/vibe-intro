@@ -1,6 +1,6 @@
 @@
 type: title
-eyebrow: A working introduction · chapter six
+eyebrow: A working introduction · chapter eight
 title: Shipping|*It.*
 @@
 Getting your app off your laptop and onto the internet —|so anyone can open it with a link.
@@ -78,7 +78,7 @@ title: Push, deploy, check, *share.*
 <div class="grid-2 reveal">
   <p class="body">Shipping is its own small loop, and it reuses habits you already have. Most hosting services can rebuild your app automatically every time you push to GitHub.</p>
   <div class="loop-list">
-    <div class="loop-step"><span class="n">1</span><div><span class="t">Push</span><span class="d">Send your latest commit to GitHub — chapter 03.</span></div></div>
+    <div class="loop-step"><span class="n">1</span><div><span class="t">Push</span><span class="d">Send your latest commit to GitHub — chapter 04.</span></div></div>
     <div class="loop-step"><span class="n">2</span><div><span class="t">Deploy</span><span class="d">The host builds and publishes it.</span></div></div>
     <div class="loop-step"><span class="n">3</span><div><span class="t">Check the live link</span><span class="d">Open the address and try it, as a stranger would.</span></div></div>
     <div class="loop-step"><span class="n">4</span><div><span class="t">Share</span><span class="d">Send the link. Gather feedback. Repeat.</span></div></div>

@@ -1,6 +1,6 @@
 @@
 type: title
-eyebrow: A working introduction · chapter four
+eyebrow: A working introduction · chapter six
 title: Functional Modelling|*for builders.*
 @@
 AI builds exactly what you ask for.|How to write complete, consistent requirements so it builds the right thing.
