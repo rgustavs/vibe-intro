@@ -26,6 +26,7 @@
 
   function render() {
     slides.forEach((s, idx) => s.classList.toggle('is-active', idx === i));
+    if (slides[i]) slides[i].scrollTop = 0;
     dots.forEach((d, idx) => d.classList.toggle('is-active', idx === i));
     counter.textContent = pad(i + 1) + ' / ' + pad(total);
     progress.style.width = (((i + 1) / total) * 100) + '%';
