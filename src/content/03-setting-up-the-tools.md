@@ -1,6 +1,6 @@
 @@
 type: title
-eyebrow: A working introduction · chapter two
+eyebrow: A working introduction · chapter three
 title: Setting Up|*the Tools.*
 @@
 Where vibe coding actually happens —|VS Code and Antigravity, and the agent loop inside them.
@@ -113,7 +113,7 @@ title: Five parts of your *workspace.*
 - Editor | Where the code is shown | You can read changes even if you don't write them.
 - Agent panel | Where you talk to the AI | Describe tasks; see what it proposes.
 - Terminal | Where you run things | Start the app, install tools, see output.
-- Source control | Where you save versions | Commits and history — chapter 03.
+- Source control | Where you save versions | Commits and history — chapter 04.
 lede: You'll spend most of your time in just two: the agent panel and the terminal.
 :::
 

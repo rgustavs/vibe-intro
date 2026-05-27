@@ -1,6 +1,6 @@
 @@
 type: title
-eyebrow: A working introduction · chapter three
+eyebrow: A working introduction · chapter four
 title: Version Control|*Basics.*
 @@
 The safety net under every vibe coding session —|save points, history, and a way back, with Git and GitHub.
