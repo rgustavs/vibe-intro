@@ -76,7 +76,56 @@ title: Describe, run, review, *refine.*
 
 @@
 type: default
-eyebrow: 04 · What good looks like
+eyebrow: 04 · Where AI helps
+title: Brilliant at some things, *hopeless* at others.
+@@
+:::html
+<div class="grid-2 reveal">
+  <div class="stack">
+    <p class="body">Knowing <em>when</em> to reach for an agent is half the skill. The more a task is sheer <strong>effort</strong> or <strong>reasoning</strong>, the more it shines. The more it turns on <strong>judgement</strong> and <strong>courage</strong>, the more it needs you.</p>
+    <p class="body subtext">Read it top to bottom: as the work shifts from <em>doing</em> to <em>deciding</em>, the agent's usefulness falls away to nothing.</p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;"><strong style="font-size:15px;">Effort</strong><span style="font-family:var(--font-code);font-size:11px;letter-spacing:0.06em;color:#6F7F6A;">VERY HIGH</span></div>
+      <div style="height:8px;border-radius:4px;background:var(--color-sand);margin:5px 0 3px;overflow:hidden;"><div style="height:100%;width:94%;background:#6F7F6A;"></div></div>
+      <p style="margin:0;font-size:12.5px;line-height:1.4;color:var(--color-subtext);">Volume of manual, repetitive work.</p>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;"><strong style="font-size:15px;">Reasoning</strong><span style="font-family:var(--font-code);font-size:11px;letter-spacing:0.06em;color:#6F7F6A;">HIGH</span></div>
+      <div style="height:8px;border-radius:4px;background:var(--color-sand);margin:5px 0 3px;overflow:hidden;"><div style="height:100%;width:76%;background:#6F7F6A;"></div></div>
+      <p style="margin:0;font-size:12.5px;line-height:1.4;color:var(--color-subtext);">Complex logic and multi-step problems.</p>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;"><strong style="font-size:15px;">Coordination</strong><span style="font-family:var(--font-code);font-size:11px;letter-spacing:0.06em;color:#9C7B43;">MODERATE</span></div>
+      <div style="height:8px;border-radius:4px;background:var(--color-sand);margin:5px 0 3px;overflow:hidden;"><div style="height:100%;width:50%;background:#C9BAA6;"></div></div>
+      <p style="margin:0;font-size:12.5px;line-height:1.4;color:var(--color-subtext);">Juggling people, systems and handoffs.</p>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;"><strong style="font-size:15px;">Ambiguity</strong><span style="font-family:var(--font-code);font-size:11px;letter-spacing:0.06em;color:#9C7B43;">LOW</span></div>
+      <div style="height:8px;border-radius:4px;background:var(--color-sand);margin:5px 0 3px;overflow:hidden;"><div style="height:100%;width:32%;background:#C9BAA6;"></div></div>
+      <p style="margin:0;font-size:12.5px;line-height:1.4;color:var(--color-subtext);">Messy inputs, no clear "done".</p>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;"><strong style="font-size:15px;">Judgement</strong><span style="font-family:var(--font-code);font-size:11px;letter-spacing:0.06em;color:#b07a52;">VERY LOW</span></div>
+      <div style="height:8px;border-radius:4px;background:var(--color-sand);margin:5px 0 3px;overflow:hidden;"><div style="height:100%;width:16%;background:#b07a52;"></div></div>
+      <p style="margin:0;font-size:12.5px;line-height:1.4;color:var(--color-subtext);">Quality, taste or ethics with no right answer.</p>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;"><strong style="font-size:15px;">Courage</strong><span style="font-family:var(--font-code);font-size:11px;letter-spacing:0.06em;color:#b07a52;">ZERO</span></div>
+      <div style="height:8px;border-radius:4px;background:var(--color-sand);margin:5px 0 3px;overflow:hidden;"><div style="height:100%;width:6%;background:#b07a52;"></div></div>
+      <p style="margin:0;font-size:12.5px;line-height:1.4;color:var(--color-subtext);">Personal risk; standing by an unpopular call.</p>
+    </div>
+  </div>
+</div>
+<p class="lede reveal" style="margin-top: var(--space-lg);">From effort to courage, AI's usefulness drops to zero. Lean on the top; keep the bottom yours.</p>
+:::
+
+===
+
+@@
+type: default
+eyebrow: 05 · What good looks like
 title: Five ingredients of a good session.
 @@
 :::anatomy
@@ -191,7 +240,7 @@ note. Don't allow that.
 
 @@
 type: default
-eyebrow: 05 · Pitfalls
+eyebrow: 06 · Pitfalls
 title: Where beginners *get stuck.*
 @@
 :::html
@@ -212,12 +261,13 @@ title: Where beginners *get stuck.*
 @@
 type: takeaways
 eyebrow: In closing
-title: Four things to *remember.*
+title: Five things to *remember.*
 @@
 :::takeaways
 You describe behaviour; the agent writes the code.
 Work in small loops: describe, run, review, refine.
 Give clear intent and context — vague in, vague out.
+Lean on AI for effort and reasoning; keep judgement and courage yours.
 You stay the author: read it, run it, save working versions.
 lede: Clear intent. Calm building.
 :::
