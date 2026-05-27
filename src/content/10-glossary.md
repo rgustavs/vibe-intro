@@ -88,7 +88,8 @@ title: Going live, and the *agent.*
 - Hosting | The service that keeps it running online | Someone else's computer, always on.
 - Agent | The AI that reads, writes, and runs code for you | Your pair — you describe, it builds.
 - Prompt | The instruction you give the agent | The whole subject of appendix A.
-- Token | The small chunks models read and write in | Roughly a word-piece; longer chats cost more.
+- Token | The small chunks models read and write in | Roughly a word-piece — see the next slide.
+- Context window | The most tokens a model can hold at once | Its short-term memory; fill it and it forgets.
 lede: Deploy and hosting are chapter eight; the agent is chapter one.
 :::
 
@@ -96,7 +97,43 @@ lede: Deploy and hosting are chapter eight; the agent is chapter one.
 
 @@
 type: default
-eyebrow: 06 · A note on jargon
+eyebrow: 06 · Tokens & the context window
+title: Why a chat can *run out.*
+@@
+:::html
+<div class="grid-2 reveal">
+  <div class="stack">
+    <p class="body">A model measures everything it reads and writes in <em>tokens</em> — roughly word-pieces (about four characters each). Every model has a <em>context window</em>: the most tokens it can hold at one time. That window has to fit your prompts, the agent's replies, <strong>and</strong> any code it's looking at.</p>
+    <p class="body subtext">As a chat grows, the window fills up. When it's full, the oldest parts drop out of view and the model starts to "forget" what you said early on. That's what people mean by running out of tokens — you've run past the window, not out of money.</p>
+  </div>
+  <div class="stack-sm">
+    <div class="card">
+      <div class="label">Signs you're running out</div>
+      <ul class="dotlist" style="margin-top: 8px;">
+        <li>It contradicts a decision you made earlier</li>
+        <li>It re-asks something you already answered</li>
+        <li>It repeats a mistake you'd corrected</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="label">What to do</div>
+      <ul class="dotlist" style="margin-top: 8px;">
+        <li>Start a fresh chat for each new task</li>
+        <li>One job per chat — keep it focused (appendix A)</li>
+        <li>Give a short recap when you start over</li>
+        <li class="muted">Lean on commits, not the chat, to hold progress (chapter four)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<p class="lede reveal" style="margin-top: var(--space-lg);">A long chat also costs more and replies slow down. A short, fresh chat is usually sharper — and cheaper.</p>
+:::
+
+===
+
+@@
+type: default
+eyebrow: 07 · A note on jargon
 title: You don't have to *memorise* this.
 @@
 :::html
@@ -117,11 +154,12 @@ title: You don't have to *memorise* this.
 @@
 type: takeaways
 eyebrow: In closing
-title: Three things to *remember.*
+title: Four things to *remember.*
 @@
 :::takeaways
 A repo holds your project; commits are save points; branches are safe places to try things.
 Frontend is the screen, backend is the logic, and the API is how they talk.
+A model's context window is finite — when a chat fills it up, start fresh with a short recap.
 You don't need to memorise jargon — recognise it, and ask the agent to explain the rest.
 lede: The words stop being a wall once you've met them once.
 :::
