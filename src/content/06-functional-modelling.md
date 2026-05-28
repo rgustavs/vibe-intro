@@ -294,6 +294,7 @@ title: Using *Agent Skills* for analysis.
     <div class="label">Step 1: Discover</div>
     <div class="title">The Brainstorm skill</div>
     <p>Use it to open things up — let the AI surface edge cases, odd states, and unhappy paths you haven't considered.</p>
+    <p class="subtext" style="margin-top: 6px;">Source: <a href="https://sickn33.github.io/antigravity-awesome-skills/skill/brainstorming">sickn33.github.io · brainstorming</a></p>
     <div class="label" style="margin-top: 20px;">Step 2: Validate</div>
     <div class="title">The Grill Me skill</div>
     <p>Use it to tighten things up — let the AI pick at your written logic and point out the contradictions.</p>
@@ -311,7 +312,7 @@ title: Using the *Brainstorm* skill.
 :::example
 lead:
 ### Finding the missing states.
-When you have a rough idea, trigger the Brainstorm skill. Because it's designed to be a divergent facilitator, it won't just say "great idea."
+When you have a rough idea, trigger the [Brainstorm skill](https://sickn33.github.io/antigravity-awesome-skills/skill/brainstorming). Because it's designed to be a divergent facilitator, it won't just say "great idea."
 It will actively help you map out the negative paths you need for your functional spec.
 tags: Discovery, Edge Cases, Brainstorm Skill
 ---
