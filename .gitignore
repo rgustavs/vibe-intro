@@ -1,2 +1,5 @@
 # Generated output — built by `python build.py` and by CI for GitHub Pages.
 dist/
+
+# Python bytecode cache.
+__pycache__/

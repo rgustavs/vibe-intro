@@ -1,0 +1,8 @@
+Editorial, minimal flat-vector illustration for a calm teaching slide deck.
+Soft, muted earthy palette: sage green (#6F7F6A), slate blue (#8FA9B8),
+warm tan (#C9BAA6), pale sage (#A8BDB6), on a warm off-white background
+(#F7F4EE). Generous negative space, gentle geometric shapes, subtle paper
+texture, soft natural lighting, friendly and modern. No text, no lettering,
+no logos, no watermarks, no UI chrome.
+
+Subject: {prompt}

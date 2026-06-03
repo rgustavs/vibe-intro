@@ -282,6 +282,45 @@ ul.dotlist li::before {
 }
 ul.dotlist li.muted::before { background: var(--color-mist); }
 
+/* ---------- figures / generated images ---------- */
+.figure {
+  margin: var(--space-lg) 0 0;
+  width: 100%;
+  max-width: 880px;
+}
+.figure-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 56vh;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.figure figcaption {
+  margin-top: var(--space-sm);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--color-subtext);
+}
+/* Shown only when a slide references an image that hasn't been generated yet. */
+.image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 220px;
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--color-border);
+  background: repeating-linear-gradient(135deg,
+    var(--color-panel), var(--color-panel) 12px,
+    var(--color-surface) 12px, var(--color-surface) 24px);
+  color: var(--color-subtext);
+  font-family: var(--font-code);
+  font-size: 13px;
+}
+
 /* ---------- title slide ---------- */
 .title-slide { align-items: flex-start; }
 .title-mark { margin-bottom: var(--space-xl); }

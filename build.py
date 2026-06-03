@@ -25,6 +25,10 @@ Authoring format (per .md file):
         :::anatomy   pill | main | sub rows + optional lede:
         :::example   lead column + a prompt-block (for worked examples)
         :::takeaways auto-numbered lines + optional lede:
+        :::image     slug: / alt: / caption: / prompt: — embeds a generated
+                     image (src/assets/images/<slug>.png) as a base64 figure.
+                     Images are NOT generated at build time; run
+                     tools/generate_images.py once, commit the PNG, then build.
         :::html      raw HTML passthrough (escape hatch)
   - Prompt-block highlight tokens (inside fences/compare/example bodies):
         [h]..[/h] section header   [k]..[/k] keyword   [c]..[/c] comment
@@ -46,7 +50,12 @@ CONTENT = os.path.join(SRC, "content")
 LAYOUT = os.path.join(SRC, "layout")
 STYLES = os.path.join(SRC, "styles")
 FONTS = os.path.join(SRC, "assets", "fonts")
+IMAGES = os.path.join(SRC, "assets", "images")
 DIST = os.path.join(ROOT, "dist")
+
+# Extensions tried when resolving an image slug -> file (in preference order).
+IMAGE_EXTS = ((".png", "image/png"), (".webp", "image/webp"),
+              (".jpg", "image/jpeg"), (".jpeg", "image/jpeg"))
 
 CDN_FONT_HEAD = (
     '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
@@ -270,11 +279,70 @@ def directive_takeaways(raw, where):
     return block
 
 
+def parse_image_block(raw):
+    """Parse an :::image body into {slug, alt, caption, size, prompt}.
+
+    Simple `key: value` lines; `prompt:` is greedy — its value plus every line
+    after it (up to the closing :::) is the prompt. Shared shape with
+    tools/generate_images.py, which reads slug + prompt.
+    """
+    meta = {"slug": "", "alt": "", "caption": "", "size": "", "prompt": ""}
+    lines = raw.split("\n")
+    i = 0
+    while i < len(lines):
+        m = re.match(r"^\s*(\w+)\s*:\s?(.*)$", lines[i])
+        if m and m.group(1) in meta:
+            key, val = m.group(1), m.group(2)
+            if key == "prompt":
+                rest = [val] if val.strip() else []
+                rest.extend(lines[i + 1:])
+                meta["prompt"] = "\n".join(rest).strip()
+                break
+            meta[key] = val.strip()
+        i += 1
+    return meta
+
+
+def image_data_uri(slug):
+    """Return a base64 data: URI for src/assets/images/<slug>.<ext>, or None."""
+    import base64
+    for ext, mime in IMAGE_EXTS:
+        fpath = os.path.join(IMAGES, slug + ext)
+        if os.path.isfile(fpath):
+            with open(fpath, "rb") as f:
+                b64 = base64.b64encode(f.read()).decode("ascii")
+            return "data:%s;base64,%s" % (mime, b64)
+    return None
+
+
+def directive_image(raw, where):
+    meta = parse_image_block(raw)
+    slug = meta["slug"]
+    if not slug:
+        warn("image: missing 'slug' in %s" % where)
+        return ""
+    alt = meta["alt"]
+    caption = meta["caption"]
+    uri = image_data_uri(slug)
+    if uri is None:
+        warn("image '%s' in %s has no file in src/assets/images/ — "
+             "run: python tools/generate_images.py" % (slug, where))
+        inner = ('<div class="image-placeholder" role="img" aria-label="%s">'
+                 '<span>image: %s</span></div>') % (
+            html.escape(alt or slug, quote=True), html.escape(slug, quote=False))
+    else:
+        inner = '<img class="figure-img" src="%s" alt="%s" loading="lazy"/>' % (
+            uri, html.escape(alt, quote=True))
+    cap = ('\n  <figcaption>%s</figcaption>' % render_inline(caption)) if caption else ""
+    return '<figure class="figure reveal">\n  %s%s\n</figure>' % (inner, cap)
+
+
 DIRECTIVES = {
     "compare": directive_compare,
     "anatomy": directive_anatomy,
     "example": directive_example,
     "takeaways": directive_takeaways,
+    "image": directive_image,
 }
 
 

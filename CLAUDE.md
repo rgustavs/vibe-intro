@@ -9,8 +9,9 @@ A static slide-deck compiler for a teaching series ("Vibe Coding — A Working I
 ## Commands
 
 ```bash
-python build.py              # compile all decks -> dist/ (also writes index.html + decks.zip)
-python tools/fetch_fonts.py  # one-time, needs internet: download webfonts into src/assets/fonts/
+python build.py                  # compile all decks -> dist/ (also writes index.html + decks.zip)
+python tools/fetch_fonts.py      # one-time, needs internet: download webfonts into src/assets/fonts/
+python tools/generate_images.py  # prompt-generate slide images (needs internet + OPENAI_API_KEY)
 ```
 
 - Requires only Python 3 standard library. No dependencies to install.
@@ -32,6 +33,7 @@ The build is a one-pass compiler in `build.py`. To understand it, read these tog
 - **`src/layout/`** — `deck.html` and `index.html` are templates with `{{PLACEHOLDER}}` tokens substituted by `build.py`; `nav.js` is the inlined keyboard/swipe navigation.
 - **`src/styles/`** — `deck.css` (decks) and `index.css` (landing page), inlined into every output.
 - **`src/assets/fonts/`** — if `fonts.css` exists, `build.py` base64-embeds the woff2 files so decks work fully offline; otherwise it falls back to the Google Fonts CDN.
+- **`src/assets/images/`** — generated slide images (committed, like the fonts). `build.py` base64-embeds `<slug>.png` for each `:::image` directive; it never generates them. `prompt_template.txt` holds the shared house style.
 
 Each deck compiles to a single self-contained `.html` (CSS, JS, fonts all inlined). `build.py` also emits `index.html` and a `decks.zip` of everything.
 
@@ -43,7 +45,7 @@ Defined and documented at the top of `build.py` (docstring) — read it before e
 
 - `===` on its own line separates slides.
 - Each slide opens with an `@@ ... @@` front-matter block: `type:` (`title` | `default` | `example` | `takeaways`), `eyebrow:`, `title:`. In `title:`, `*emphasis*` → `<em>` and `|` → line break.
-- Block directives, fenced `:::name ... :::`: `compare`, `anatomy`, `example`, `takeaways`, and `html` (raw passthrough / escape hatch).
+- Block directives, fenced `:::name ... :::`: `compare`, `anatomy`, `example`, `takeaways`, `image`, and `html` (raw passthrough / escape hatch).
 - Prompt-block highlight tokens inside fenced/example bodies: `[h]header[/h]`, `[k]keyword[/k]`, `[c]comment[/c]`, `[arr]arrow[/arr]`, `[arg]arg[/arg]`, `[ok]ok[/ok]`, and `{{..}}` (shorthand for `[k]..[/k]`).
 - Inline prose: `**bold**`, `*italic*`, `` `code` ``, `[text](url)`.
 - `anatomy` rows may be prefixed `middle:` / `bottom:` for row styling; `~` before a list item marks it `muted`.
@@ -53,6 +55,26 @@ Defined and documented at the top of `build.py` (docstring) — read it before e
 1. Create `src/content/NN-name.md` following the established slide arc (title → Why this matters → Definition → Anatomy → loop/principles → worked examples → Pitfalls → Takeaways).
 2. Add a deck entry to `series.json` (including both SVGs, using the brand palette below).
 3. Run `python build.py`; confirm no warnings and that the new chapter appears on the index and chains correctly.
+
+### Adding an image
+
+Images are **prompt-generated**, and generation is deliberately kept **out of the build**: it costs money and needs an API key, so it works exactly like fonts — generate once by hand, commit the result, and `build.py` embeds it.
+
+1. Declare the image on a slide with the `:::image` directive. `slug` + `prompt` drive generation; `alt`/`caption` are placed on the slide:
+
+   ```
+   :::image
+   slug: agent-loop
+   alt: A four-step feedback loop diagram
+   caption: describe → run → review → refine
+   prompt:
+   Four soft rounded nodes connected by gentle arrows in a loop, each a
+   different muted earthy tone.
+   :::
+   ```
+
+2. Run `OPENAI_API_KEY=sk-... python tools/generate_images.py` (use `--force` to regenerate, `--only <slug>` for one, `--list` to inspect). Every prompt is wrapped in the shared template at `src/assets/images/prompt_template.txt` so the deck stays visually consistent.
+3. Commit `src/assets/images/<slug>.png`, then run `python build.py`. A referenced image with no committed file is a **warning** and renders a placeholder — so generate + commit before building clean. OpenAI is the default provider; others can be added in `tools/generate_images.py`.
 
 ## Content conventions
 
