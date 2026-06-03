@@ -142,6 +142,43 @@ title: Let it run — or *step in.*
 ===
 
 @@
+type: default
+eyebrow: 07 · A digital coworker
+title: When an agent gets a *job title.*
+@@
+:::html
+<div class="grid-2 reveal" style="margin-top: var(--space-md);">
+  <div class="stack">
+    <p class="body">Wrap an agent in a settled role — a fixed set of duties, its own login, its own remit — and people start calling it a <em>digital coworker</em>: software packaged to do a job a person used to do.</p>
+    <p class="body subtext">Think first-line support, sorting invoices, tidying customer records. The same loop you've met all chapter; what's new is the framing — a post on the team, not a tool in your hand.</p>
+  </div>
+  <div class="card">
+    <div class="label">Two readings of one engine</div>
+    <div class="title">Agentic AI — the engine</div>
+    <p>Goal-oriented: you say <em>what</em>, it works out <em>how</em>, and adapts when things shift.</p>
+    <div class="title" style="margin-top: 16px;">Digital coworker — the packaging</div>
+    <p>Process-oriented: a defined role with set tasks, run day after day.</p>
+  </div>
+</div>
+:::
+
+===
+
+@@
+type: default
+eyebrow: 08 · The shape of the role
+title: A coworker, not just a *tool.*
+@@
+:::anatomy
+- Focus | A settled process | Handle the invoices, answer first-line tickets, keep records tidy.
+- middle: Control | Scripts, now reasoning | Once rigid rule-by-rule (RPA); modern ones read plain language and adapt.
+- bottom: Identity | Its own place on the team | Often a real account, an email address, access to named systems.
+lede: The more it logs in and acts on its own, the more it needs naming, scoping and oversight (appendix D).
+:::
+
+===
+
+@@
 type: example
 eyebrow: Worked example · 01 of 03
 title: One goal, *many* steps.
@@ -227,7 +264,7 @@ must prove it. Stop when it's green."
 
 @@
 type: default
-eyebrow: 07 · Pitfalls
+eyebrow: 09 · Pitfalls
 title: Where agents *go wrong.*
 @@
 :::html
@@ -248,12 +285,13 @@ title: Where agents *go wrong.*
 @@
 type: takeaways
 eyebrow: In closing
-title: Four things to *remember.*
+title: Five things to *remember.*
 @@
 :::takeaways
 Agentic AI doesn't just answer — it plans, uses tools, and loops until the goal is met.
 Underneath, it runs describe → run → review → refine by itself, many times over.
 Autonomy is a dial: short leash for risky, irreversible work; long leash for safe, checkable jobs.
 Give it goals it can verify, and keep commits as your checkpoint before it acts.
+Wrap that engine in a defined role and it becomes a digital coworker — handy framing, but it still needs naming, scoping and oversight.
 lede: Set the goal. Hold the leash. Let it do the turning.
 :::

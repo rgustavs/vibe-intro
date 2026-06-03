@@ -87,6 +87,7 @@ title: Going live, and the *agent.*
 - Deploy | Putting your app online for others to use | Moving it from your laptop to the internet.
 - Hosting | The service that keeps it running online | Someone else's computer, always on.
 - Agent | The AI that reads, writes, and runs code for you | Your pair — you describe, it builds.
+- RPA | Older automation that follows fixed, hand-written rules | "Robotic process automation" — the agent's rule-bound cousin (appendix F).
 - Prompt | The instruction you give the agent | The whole subject of appendix A.
 - Token | The small chunks models read and write in | Roughly a word-piece — see the next slide.
 - Context window | The most tokens a model can hold at once | Its short-term memory; fill it and it forgets.
