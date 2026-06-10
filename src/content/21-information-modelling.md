@@ -80,12 +80,14 @@ title: Draw the *relationship rules.*
 @@
 :::html
 <div class="model-er reveal">
-  <div class="model-entity"><span>Team</span><strong>People Success</strong></div>
+  <div class="model-entity worker"><span>Team</span><strong>People Success</strong></div>
   <div class="model-link"><b>has many</b><i>1 → many</i></div>
-  <div class="model-entity"><span>Worker</span><strong>Johan, Martin</strong></div>
-  <div class="model-entity"><span>Skill Area</span><strong>AI Tools</strong></div>
+  <div class="model-entity worker"><span>Worker</span><strong>Johan, Martin</strong></div>
+</div>
+<div class="model-er reveal" style="margin-top: var(--space-lg);">
+  <div class="model-entity skill"><span>Skill Area</span><strong>AI Tools</strong></div>
   <div class="model-link"><b>has many</b><i>1 → many</i></div>
-  <div class="model-entity"><span>Skill</span><strong>Antigravity, Lovable</strong></div>
+  <div class="model-entity skill"><span>Skill</span><strong>Antigravity, Lovable</strong></div>
 </div>
 <div class="grid-2 reveal" style="margin-top: var(--space-lg);">
   <div class="card"><div class="label">Rule</div><div class="title">A worker belongs to one team</div><p>Johan and Martin both point back to People Success.</p></div>
@@ -108,11 +110,11 @@ title: Workers and skills are *many-to-many.*
     <div class="model-node worker">Martin</div>
   </div>
   <div class="model-web">
-    <svg viewBox="0 0 380 180" role="img" aria-label="Many-to-many lines between workers and skills">
-      <path d="M20 45 C130 15 250 15 360 45" />
-      <path d="M20 135 C130 165 250 165 360 135" />
-      <path class="ghost" d="M20 45 C130 90 250 90 360 135" />
-      <path class="ghost" d="M20 135 C130 90 250 90 360 45" />
+    <svg viewBox="0 0 220 240" aria-hidden="true">
+      <path class="active" d="M0 60 L220 60" />
+      <path class="active" d="M0 180 L220 180" />
+      <path class="ghost" d="M0 60 L220 180" />
+      <path class="ghost" d="M0 180 L220 60" />
     </svg>
     <div class="model-badge">many ↔ many</div>
   </div>
@@ -155,17 +157,38 @@ eyebrow: 07 · Full picture
 title: The model now has *five boxes.*
 @@
 :::html
-<div class="model-schema reveal">
-  <div class="model-entity team"><span>Team</span><strong>People Success</strong></div>
-  <div class="model-entity worker"><span>Worker</span><strong>Johan<br>Martin</strong></div>
-  <div class="model-entity assignment"><span>Skill Assignment</span><strong>who has what</strong></div>
-  <div class="model-entity skill"><span>Skill</span><strong>Antigravity<br>Lovable</strong></div>
-  <div class="model-entity area"><span>Skill Area</span><strong>AI Tools</strong></div>
-  <svg viewBox="0 0 900 260" aria-hidden="true">
-    <path d="M165 75 L285 75" /><text x="190" y="58">has workers</text>
-    <path d="M445 75 L565 75" /><text x="468" y="58">has skill</text>
-    <path d="M735 75 L735 175" /><text x="746" y="130">belongs to</text>
-    <path d="M365 142 L365 175 L445 175 L445 142" /><text x="370" y="203">worker has many skills</text>
+<div class="model-schema sophisticated reveal">
+  <div class="model-schema-row">
+    <div class="model-entity team"><span>Team</span><strong>People Success</strong></div>
+    <div class="model-entity area"><span>Skill Area</span><strong>AI Tools</strong></div>
+  </div>
+  <div class="model-schema-row">
+    <div class="model-entity worker"><span>Worker</span><strong>Johan, Martin</strong></div>
+    <div class="model-entity skill"><span>Skill</span><strong>Antigravity, Lovable</strong></div>
+  </div>
+  <div class="model-entity assignment wide"><span>Skill Assignment</span><strong>who has what</strong></div>
+
+  <svg class="model-schema-connector" viewBox="0 0 1000 600" aria-hidden="true">
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" />
+      </marker>
+    </defs>
+    <!-- Team to Worker (Straight down) -->
+    <path d="M300 140 L300 240" stroke-dasharray="0" opacity="1" />
+    <text x="220" y="200" fill="var(--color-subtext)" font-family="var(--font-code)" font-size="12">has workers</text>
+
+    <!-- Area to Skill (Straight down) -->
+    <path d="M700 140 L700 240" stroke-dasharray="0" opacity="1" />
+    <text x="710" y="200" fill="var(--color-subtext)" font-family="var(--font-code)" font-size="12">has skills</text>
+
+    <!-- Worker to Assignment (Curved) -->
+    <path d="M300 370 Q300 480 500 480" />
+
+    <!-- Skill to Assignment (Curved) -->
+    <path d="M700 370 Q700 480 500 480" />
+
+    <text x="440" y="520" fill="var(--color-subtext)" font-family="var(--font-code)" font-size="12" text-anchor="middle">links worker & skill</text>
   </svg>
 </div>
 <p class="lede reveal" style="margin-top: var(--space-lg);">The join box is what makes the model explainable: it names the relationship instead of hiding it in a line.</p>
@@ -248,16 +271,29 @@ eyebrow: 11 · Final model
 title: The evolved *information model.*
 @@
 :::html
-<div class="model-final reveal">
-  <div class="model-final-row top">
-    <div class="model-entity team"><span>Team</span><strong>People Success</strong></div>
-    <div class="model-entity area"><span>Skill Area</span><strong>AI Tools</strong></div>
+<div class="model-final sophisticated reveal">
+  <div class="model-schema sophisticated">
+    <div class="model-schema-row">
+      <div class="model-entity team"><span>Team</span><strong>Team</strong><small>One-to-many Workers</small></div>
+      <div class="model-entity area"><span>Skill Area</span><strong>Area</strong><small>One-to-many Skills</small></div>
+    </div>
+    <div class="model-schema-row">
+      <div class="model-entity worker"><span>Worker</span><strong>Worker</strong><small>e.g. Johan, Martin</small></div>
+      <div class="model-entity skill"><span>Skill</span><strong>Skill</strong><small>e.g. Antigravity</small></div>
+    </div>
+    <div class="model-entity assignment wide">
+      <span>Skill Assignment / Event</span>
+      <strong>Worker + Skill + Level + Date</strong>
+      <small>The "join" that captures history</small>
+    </div>
+
+    <svg class="model-schema-connector" viewBox="0 0 1000 600" aria-hidden="true">
+      <path d="M300 140 L300 240" />
+      <path d="M700 140 L700 240" />
+      <path d="M300 370 Q300 480 500 480" />
+      <path d="M700 370 Q700 480 500 480" />
+    </svg>
   </div>
-  <div class="model-final-row middle">
-    <div class="model-entity worker"><span>Worker</span><strong>Johan<br>Martin</strong><small>belongs to Team</small></div>
-    <div class="model-entity skill"><span>Skill</span><strong>Antigravity<br>Lovable</strong><small>belongs to Area</small></div>
-  </div>
-  <div class="model-entity assignment wide"><span>Skill Assignment / Skill Event</span><strong>Worker + Skill + Level + Effective date</strong><small>Johan · Antigravity · Level 2 · after Aug 30</small></div>
 </div>
 <p class="lede reveal" style="margin-top: var(--space-lg);">The journey: objects → containers → many-to-many relationship → level → time.</p>
 :::
